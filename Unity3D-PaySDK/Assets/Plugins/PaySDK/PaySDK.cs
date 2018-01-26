@@ -6,9 +6,10 @@ namespace com.moblink.unity3d
 {
 	public class PaySDK {
 
-		public static T createMobPayAPI<T>()
+		public static API createMobPayAPI<API> () where API : MobPayApi
 		{
-			return T::create ();	
+			return (API)typeof(API).GetMethod("create").Invoke(typeof(API), null);
+			//return API.create ();	
 		}
 	}
 

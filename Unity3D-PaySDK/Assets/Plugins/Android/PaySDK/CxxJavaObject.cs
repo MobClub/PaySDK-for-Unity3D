@@ -10,6 +10,7 @@ namespace com.moblink.unity3d
 	{
 		private IntPtr javaObjec;
 
+		private static Hashtable cxxJavaMap = new Hashtable();
 		// public static IntPtr 
 
 
@@ -20,7 +21,8 @@ namespace com.moblink.unity3d
              */
 		public void attachJavaObject(IntPtr lRef)
 		{
-			
+			IntPtr gRef = AndroidJNI.NewGlobalRef (lRef);
+			cxxJavaMap.Add (this, gRef);
 		}
 
 		/**
@@ -29,6 +31,9 @@ namespace com.moblink.unity3d
              */
 		public void detachJavaObject(IntPtr lRef)
 		{
+			IntPtr gRef = (IntPtr)cxxJavaMap [this];
+			cxxJavaMap.Remove (this);
+			AndroidJNI.DeleteGlobalRef (gRef);
 		}
 
 		/**
@@ -37,6 +42,8 @@ namespace com.moblink.unity3d
              */
 		public IntPtr getJavaObject()
 		{
+			IntPtr gRef = (IntPtr)cxxJavaMap [this];
+			return gRef;
 		}
 
 		/**
@@ -45,13 +52,15 @@ namespace com.moblink.unity3d
              */
 		public IntPtr getLocalJavaObject()
 		{
-			
+			IntPtr gRef = getJavaObject ();
+			return AndroidJNI.NewLocalRef (gRef);
 		}
 		public static IntPtr newJavaInstance(string clazz) 
 		{
 			IntPtr jclazz = AndroidJNI.FindClass (clazz);
 			IntPtr jConstructor = AndroidJNI.GetMethodID (jclazz, "<init>", "()V");
-			IntPtr jret = AndroidJNI.NewObject (jclazz, jConstructor);
+			IntPtr jret = AndroidJNI.NewObject (jclazz, jConstructor, new jvalue[0]);
+			return jret;
 		}
 		public static IntPtr getJavaClass(IntPtr jo)
 		{
@@ -63,6 +72,44 @@ namespace com.moblink.unity3d
 			IntPtr jret = AndroidJNI.GetMethodID(jclazz, jmethod, jsign);
 			return jret;
 		}
+
+		public static void callJavaStart()
+		{
+			AndroidJNI.AttachCurrentThread ();
+			AndroidJNI.PushLocalFrame (16);
+		}
+
+		public static void callJavaEnd()
+		{
+			IntPtr p = new IntPtr();
+			AndroidJNI.PopLocalFrame (p);
+			// TODO why do not detach
+			// AndroidJNI.DetachCurrentThread ();
+		}
+
+
+		public static jvalue[] createJavaParam(params object[] jparams)
+		{
+			object[] temp = new object[jparams.Length];
+			for (int i = 0; i < jparams.Length; i++) {
+				temp [i] = jparams [i];
+			}
+			return AndroidJNIHelper.CreateJNIArgArray (temp);
+		}
+
+		public static jvalue[] createJavaParam(params IntPtr[] jparams)
+		{
+			jvalue[] jret = new jvalue[jparams.Length];
+			for (int i = 0; i < jparams.Length; i++) {
+				jret [i].l = jparams [i];
+			}
+			return jret;
+		}
+
+
+
+
+			
 	}
 	#endif
 }
