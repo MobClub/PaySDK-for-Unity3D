@@ -9,7 +9,6 @@ namespace com.moblink.unity3d
 	public class AndroidPayOrder : PayOrder {
 
 		private CxxJavaObject javaCore = new CxxJavaObject();
-		private IntPtr javaObjec;
 
 		public AndroidPayOrder()
 		{
@@ -37,7 +36,6 @@ namespace com.moblink.unity3d
 			IntPtr jthiz = javaCore.getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "setOrderNo", "(Ljava/lang/String;)V");
-			// IntPtr jvalue = AndroidJNI.NewStringUTF (orderNo);
 			AndroidJNI.CallVoidMethod (jthiz, jmethod, CxxJavaObject.createJavaParam (orderNo));
 			CxxJavaObject.callJavaEnd ();
 		}
