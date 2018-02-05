@@ -24,7 +24,7 @@ namespace com.moblink.unity3d
 			IntPtr jthiz = javaCore.getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID (jclazz, "getOrderNo", "()Ljava/lang/String;");
-			IntPtr jret = AndroidJNI.CallObjectMethod(jthiz, jmethod, null);
+			IntPtr jret = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
 			string ret = AndroidJNI.GetStringUTFChars(jret);
 			CxxJavaObject.callJavaEnd ();
 			return ret;
@@ -46,7 +46,7 @@ namespace com.moblink.unity3d
 			IntPtr jthiz = javaCore.getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getAmount", "()I");
-			int ret = AndroidJNI.CallIntMethod(jthiz, jmethod, null);
+			int ret = AndroidJNI.CallIntMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
 			CxxJavaObject.callJavaEnd ();
 			return ret;
 		}
@@ -67,7 +67,7 @@ namespace com.moblink.unity3d
 			IntPtr jthiz = javaCore.getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getSubject", "()Ljava/lang/String;");
-			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, null);
+			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
 			string ret = AndroidJNI.GetStringUTFChars(jvalue);
 			CxxJavaObject.callJavaEnd ();
 			return ret;
@@ -90,7 +90,19 @@ namespace com.moblink.unity3d
 			IntPtr jthiz = javaCore.getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getBody", "()Ljava/lang/String;");
-			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, null);
+			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
+			string ret = AndroidJNI.GetStringUTFChars(jvalue);
+			CxxJavaObject.callJavaEnd ();
+			return ret;
+		}
+
+		public string getBody(IntPtr lRef)
+		{
+			CxxJavaObject.callJavaStart ();
+			IntPtr jthiz = lRef;
+			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
+			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getBody", "()Ljava/lang/String;");
+			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
 			string ret = AndroidJNI.GetStringUTFChars(jvalue);
 			CxxJavaObject.callJavaEnd ();
 			return ret;
@@ -107,13 +119,24 @@ namespace com.moblink.unity3d
 			CxxJavaObject.callJavaEnd ();
 		}
 
+		public void setBody(string body, IntPtr lRef)
+		{
+			CxxJavaObject.callJavaStart ();
+			IntPtr jthiz = lRef;
+			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
+			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "setBody", "(Ljava/lang/String;)V");
+			IntPtr jvalue = AndroidJNI.NewStringUTF(body);
+			AndroidJNI.CallVoidMethod(jthiz, jmethod, CxxJavaObject.createJavaParam(jvalue));
+			CxxJavaObject.callJavaEnd ();
+		}
+
 		public override string getDescription()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = javaCore.getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getDescription", "()Ljava/lang/String;");
-			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, null);
+			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
 			string ret = AndroidJNI.GetStringUTFChars(jvalue);
 			CxxJavaObject.callJavaEnd ();
 			return ret;
@@ -136,7 +159,7 @@ namespace com.moblink.unity3d
 			IntPtr jthiz = javaCore.getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getMetadata", "()Ljava/lang/String;");
-			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, null);
+			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
 			string ret = AndroidJNI.GetStringUTFChars(jvalue);
 			CxxJavaObject.callJavaEnd ();
 			return ret;
@@ -159,7 +182,7 @@ namespace com.moblink.unity3d
 			IntPtr jthiz = javaCore.getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getTicketId", "()Ljava/lang/String;");
-			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, null);
+			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
 			string ret = AndroidJNI.GetStringUTFChars(jvalue);
 			CxxJavaObject.callJavaEnd ();
 			return ret;

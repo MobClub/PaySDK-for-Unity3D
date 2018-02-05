@@ -8,12 +8,7 @@ namespace com.moblink.unity3d
 	#if UNITY_ANDROID
 	public class CxxJavaObject
 	{
-		private IntPtr javaObjec;
-
 		private static Hashtable cxxJavaMap = new Hashtable();
-		// public static IntPtr 
-
-
 
 		/**
              * 附加javaObject对象到this对象

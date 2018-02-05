@@ -34,6 +34,7 @@ namespace com.moblink.unity3d
 			cxx.PayApi = this;
 			cxx.setOnPayListener(callback);
 			JavaCallback.sInstance = cxx;
+			JavaCallback.prepareHook ();
 			IntPtr jListener = cxx.getLocalJavaObject();
 
 			AndroidJNI.CallVoidMethod(jApi, jApiPayMethod, CxxJavaObject.createJavaParam(jorder, jListener));
@@ -118,6 +119,7 @@ namespace com.moblink.unity3d
 			cxx.PayApi = this;
 			cxx.setOnPayListener(callback);
 			JavaCallback.sInstance = cxx;
+			JavaCallback.prepareHook ();
 			IntPtr jListener = cxx.getLocalJavaObject();
 
 			AndroidJNI.CallVoidMethod(jApi, jApiPayMethod, CxxJavaObject.createJavaParam(jorder, jListener));

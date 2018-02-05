@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Runtime.InteropServices;
 
 namespace com.moblink.unity3d
 {
@@ -23,8 +24,6 @@ namespace com.moblink.unity3d
 			get { return payApi; }
 			set { payApi = value; }
 		}
-
-		private static AndroidOnPayListener<O, API> sInstance;
 
 		public AndroidOnPayListener()
 		{
@@ -68,6 +67,42 @@ namespace com.moblink.unity3d
 
 	public class JavaCallback 
 	{
+		private delegate int WillPayFunction(int t, IntPtr jt);
+		private delegate int PayEndFunction(IntPtr t, IntPtr jt);
+
+		private static int willPayFunction(int i, IntPtr cc)
+		{
+			
+			Debug.Log ("i:" + i + ", cc:" + cc);
+			return 0;
+			/*
+			IntPtr newcc = AndroidJNI.NewLocalRef (cc);
+			AndroidPayOrder order = new AndroidPayOrder ();
+			string nnn = order.getBody(newcc);
+			Debug.Log ("nnn:" + nnn);
+			return 0;
+
+			int iii = Marshal.ReadInt32 (i);
+			Debug.Log ("i:" + iii + ", cc:" + cc);
+
+
+
+
+			return 0;
+			*/
+		}
+
+		private static int payEndFunction(IntPtr t, IntPtr cc)
+		{
+			return 0;
+		}
+
+		public static void prepareHook()
+		{
+			ComMobPaySDKUnityHookSetWillPayFunction (willPayFunction);
+			ComMobPaySDKUnityHookSetPayEndFunction (payEndFunction);
+		}
+
 		public static object sInstance;
 		
 		public static void onWillPay(string param)
@@ -104,6 +139,15 @@ namespace com.moblink.unity3d
 			}
 			sInstance = null;
 		}
+
+		[DllImport("paysdk_bridge")]
+		private static extern int ComMobPaySDKUnityHookSetWillPayFunction (WillPayFunction func);
+
+		[DllImport("paysdk_bridge")]
+		private static extern int ComMobPaySDKUnityHookSetPayEndFunction (PayEndFunction func);
+
+		[DllImport("paysdk_bridge")]
+		public static extern IntPtr JNI_INTERNAL_CALL_NewObject(ref IntPtr iii);
 	}
 	#endif
 }

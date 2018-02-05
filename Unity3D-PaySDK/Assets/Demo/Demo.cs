@@ -15,6 +15,7 @@ public class Demo : MonoBehaviour {
 	private Rect windowRect;
 
 	protected void Start () {
+
 	}
 
 	void OnGUI ()
@@ -68,13 +69,31 @@ public class Demo : MonoBehaviour {
 
 	void toWxPay()
 	{
+		/*
 		PayOrder order = PayOrder.create ();
 		order.setOrderNo (getTimestamp(DateTime.Now).ToString());
 		order.setAmount (1);
 		order.setSubject("subject");
 		order.setBody("body");
+
+		string aaaa = order.getBody ();
+
+		Debug.Log ("aaaaaaaaaaaaaaaa:" + aaaa);
+
 		WxPayApi api = PaySDK.createMobPayAPI<WxPayApi> ();
 		api.pay (order, new PayListener<PayOrder, WxPayApi>());
+		*/
+
+		AndroidPayOrder order = new AndroidPayOrder();
+		IntPtr value = new IntPtr (100);
+		IntPtr jThiz = JavaCallback.JNI_INTERNAL_CALL_NewObject (ref value);
+
+		order.setBody ("abdceed", jThiz);
+
+		string aaaa = order.getBody (jThiz);
+
+		Debug.Log ("aaaaaaaaaaaaaaaa:" + aaaa);
+
 	}
 
 	void renderWindow() 
