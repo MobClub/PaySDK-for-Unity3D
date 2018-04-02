@@ -1,0 +1,69 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+apply plugin: 'com.android.application'
+apply from: '../PaySDK/build-mix.gradle'
+
+
+android {
+
+    compileSdkVersion findCompileSdkVersion()
+    buildToolsVersion findBuildTools()
+
+    defaultConfig {
+        minSdkVersion findMinSdk()
+        targetSdkVersion findTargetSdk()
+        versionCode findVersionCode()
+        versionName findVersionName()
+
+        externalNativeBuild {
+            ndkBuild {
+                arguments 'NDK_TOOLCHAIN_VERSION=4.9'
+                arguments 'APP_PLATFORM=android-' + findCompileSdkVersion()
+                arguments "NDK_APPLICATION_MK=jni/Application.mk"
+                arguments '-j' + Runtime.runtime.availableProcessors()
+            }
+        }
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path "jni/Android.mk"
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            assets.srcDirs = ['assets']
+            java.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            res.srcDirs = ['res']
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+
+        debug {
+            minifyEnabled false
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_6
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':PaySDK')
+}
