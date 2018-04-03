@@ -1,8 +1,9 @@
-import org.apache.tools.ant.taskdefs.condition.Os
-
 apply plugin: 'com.android.application'
-apply from: '../PaySDK/build-mix.gradle'
+apply from: './build-mix.gradle'
 
+if (buildDepFromMaven) {
+    apply plugin: 'com.mob.sdk'
+}
 
 android {
 
@@ -65,5 +66,11 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':PaySDK')
+    if (buildDepFromMaven) {
+        MobSDK {
+            PaySDK {version = "1.0.0"}
+        }
+    } else {
+        compile project(':PaySDK')
+    }
 }
