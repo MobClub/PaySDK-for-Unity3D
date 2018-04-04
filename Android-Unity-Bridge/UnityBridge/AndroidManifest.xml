@@ -10,6 +10,4 @@
         android:targetSdkVersion="8"
         tools:overrideLibrary="com.mob.paysdk"/>
 
-    <application/>
-
 </manifest>

@@ -7,156 +7,138 @@ namespace cn.paysdk.unity
 {
 
 	#if UNITY_ANDROID
-	public class AndroidOnPayListener<O, API> : OnPayListener<O, API>
+	public class AndroidOnPayListener<O, API> : CxxJavaObject, OnPayListener<O, API>
 	{
-		private CxxJavaObject javaCore = new CxxJavaObject();
-		private OnPayListener<O, API> onPayListener;
-		private O payOrder;
-		public O PayOrder
+		public static AndroidOnPayListener<O, API> create()
 		{
-			get { return payOrder; }
-			set { payOrder = value; }
+			return new AndroidOnPayListener<O, API>();
 		}
 
-		private API payApi;
-		public API PayApi
+		private PaySDKHandler onPayListener;
+
+		public PaySDKHandler OnPayListener
 		{
-			get { return payApi; }
-			set { payApi = value; }
+			get { return onPayListener; }
+			set { onPayListener = value; }
 		}
 
 		public AndroidOnPayListener()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jclazz = AndroidJNI.FindClass ("com/mob/paysdk/unity/OnPayListener");
-			IntPtr jConstructor = AndroidJNI.GetMethodID (jclazz, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
-			IntPtr jret = AndroidJNI.NewObject (jclazz, jConstructor, CxxJavaObject.createJavaParam ("PaySDK", "_AndroidOnWillPay", "_AndroidOnPayEnd"));
-			javaCore.attachJavaObject (jret);
+			IntPtr jConstructor = AndroidJNI.GetMethodID (jclazz, "<init>", "(JJ)V");
+			IntPtr willMethod = Marshal.GetFunctionPointerForDelegate (new WillPayFunction (willPayFunction));
+			IntPtr endMethod = Marshal.GetFunctionPointerForDelegate (new PayEndFunction (payEndFunction));
+			IntPtr jret = AndroidJNI.NewObject (jclazz, jConstructor, CxxJavaObject.createJavaParam (willMethod, endMethod));
+			attachJavaObject (jret);
 			CxxJavaObject.callJavaEnd ();
 
-
 		}
-
-		public IntPtr getLocalJavaObject()
-		{
-			return javaCore.getLocalJavaObject ();
-		}
-
+		/*
 		public void onWillPay(string param)
 		{
-			if (null != onPayListener) {
-				onPayListener.onWillPay (param, payOrder, payApi);
-			}
+
 		}
 
 		public void onPayEnd(string param)
 		{
-			/*
+
 			int result = int.Parse (param);
 			PayResult payResult = new PayResult ();
 			payResult.setPayStatus (result);
 			if (null != onPayListener) {
 				onPayListener.onPayEnd (payResult, payOrder, payApi);
-			} */
+			} 
 		}
+		*/
 
-		public override bool onWillPay(string ticketId, O order, API api) {
+		/**
+		 * 下面定义委托, 用于java回调 
+		 */
+		private delegate int WillPayFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, IntPtr jTicket);
+		private delegate void PayEndFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, int jResult);
+
+		protected bool onWillPay( O order, API api, string ticketId) {
+			PaySDKHandler l = onPayListener;
+			if (null != l) {
+				return l.onWillPay (ticketId);
+			}
 			return false;
 		}
 
-		public override void onPayEnd(int payResult, O order, API api) {
-			
-		}
-
-	}
-
-	public class JavaCallback 
-	{
-		private delegate int WillPayFunction(int t, IntPtr jt);
-		private delegate int PayEndFunction(IntPtr t, IntPtr jt);
-
-		private static int willPayFunction(int i, IntPtr cc)
-		{
-			
-			Debug.Log ("i:" + i + ", cc:" + cc);
-			IntPtr icd = Marshal.GetFunctionPointerForDelegate (new WillPayFunction(willPayFunction));
-			return 0;
-			/*
-			IntPtr newcc = AndroidJNI.NewLocalRef (cc);
-			AndroidPayOrder order = new AndroidPayOrder ();
-			string nnn = order.getBody(newcc);
-			Debug.Log ("nnn:" + nnn);
-			return 0;
-
-			int iii = Marshal.ReadInt32 (i);
-			Debug.Log ("i:" + iii + ", cc:" + cc);
-
-
-
-
-			return 0;
-			*/
-
-
-
-		}
-
-		private static int payEndFunction(IntPtr t, IntPtr cc)
-		{
-			return 0;
-		}
-
-		public static void prepareHook()
-		{
-			ComMobPaySDKUnityHookSetWillPayFunction (willPayFunction);
-			ComMobPaySDKUnityHookSetPayEndFunction (payEndFunction);
-		}
-
-		public static object sInstance;
-		
-		public static void onWillPay(string param)
-		{
-			if (null != (sInstance as AndroidOnPayListener<PayOrder, AliPayApi>)) {
-				AndroidOnPayListener<PayOrder, AliPayApi> p = (AndroidOnPayListener<PayOrder, AliPayApi>)sInstance;
-				p.onWillPay (param);
-			} else if(null != (sInstance as AndroidOnPayListener<PayOrder, WxPayApi>)) {
-				AndroidOnPayListener<PayOrder, WxPayApi> p = (AndroidOnPayListener<PayOrder, WxPayApi>)sInstance;
-				p.onWillPay (param);
-			} else if(null != (sInstance as AndroidOnPayListener<TicketOrder, AliPayApi>)) {
-				AndroidOnPayListener<TicketOrder, AliPayApi> p = (AndroidOnPayListener<TicketOrder, AliPayApi>)sInstance;
-				p.onWillPay (param);
-			} else if(null != (sInstance as AndroidOnPayListener<AliPayApi, WxPayApi>)) {
-				AndroidOnPayListener<AliPayApi, WxPayApi> p = (AndroidOnPayListener<AliPayApi, WxPayApi>)sInstance;
-				p.onWillPay (param);
+		protected void onPayEnd(O order, API api, int payResult) {
+			PaySDKHandler l = onPayListener;
+			if (null != l) {
+				// callback
+				//return l.onPayEnd (payResult, "", 0, "");
 			}
 		}
 
-		public static void onPayEnd(string param)
+		/**
+		 * java -> jni -> c# 的第一个函数
+		 */
+		private static int willPayFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, IntPtr jTicket)
 		{
-			if (null != (sInstance as AndroidOnPayListener<PayOrder, AliPayApi>)) {
-				AndroidOnPayListener<PayOrder, AliPayApi> p = (AndroidOnPayListener<PayOrder, AliPayApi>)sInstance;
-				p.onPayEnd (param);
-			} else if(null != (sInstance as AndroidOnPayListener<PayOrder, WxPayApi>)) {
-				AndroidOnPayListener<PayOrder, WxPayApi> p = (AndroidOnPayListener<PayOrder, WxPayApi>)sInstance;
-				p.onPayEnd (param);
-			} else if(null != (sInstance as AndroidOnPayListener<TicketOrder, AliPayApi>)) {
-				AndroidOnPayListener<TicketOrder, AliPayApi> p = (AndroidOnPayListener<TicketOrder, AliPayApi>)sInstance;
-				p.onPayEnd (param);
-			} else if(null != (sInstance as AndroidOnPayListener<TicketOrder, WxPayApi>)) {
-				AndroidOnPayListener<TicketOrder, WxPayApi> p = (AndroidOnPayListener<TicketOrder, WxPayApi>)sInstance;
-				p.onPayEnd (param);
+			CxxJavaObject l = findCxxJavaObject (jListener);
+
+			if (null != (l as AndroidOnPayListener<PayOrder, AliPayApi>)) {
+				AndroidOnPayListener<PayOrder, AliPayApi> p = (AndroidOnPayListener<PayOrder, AliPayApi>)l;
+				AndroidPayOrder order = (AndroidPayOrder)findCxxJavaObject (jOrder);
+				AndroidAliPayApi api = (AndroidAliPayApi)findCxxJavaObject (jApi);
+				string ticket = AndroidJNI.GetStringUTFChars (jTicket);
+				return p.onWillPay (order, api, ticket) ? 1 : 0;
+			} else if (null != (l as AndroidOnPayListener<PayOrder, WxPayApi>)) {
+				AndroidOnPayListener<PayOrder, WxPayApi> p = (AndroidOnPayListener<PayOrder, WxPayApi>)l;
+				AndroidPayOrder order = (AndroidPayOrder)findCxxJavaObject (jOrder);
+				AndroidWxPayApi api = (AndroidWxPayApi)findCxxJavaObject (jApi);
+				string ticket = AndroidJNI.GetStringUTFChars (jTicket);
+				return p.onWillPay (order, api, ticket) ? 1 : 0;
+			} else if (null != (l as AndroidOnPayListener<TicketOrder, AliPayApi>)) {
+				AndroidOnPayListener<TicketOrder, AliPayApi> p = (AndroidOnPayListener<TicketOrder, AliPayApi>)l;
+				AndroidTicketOrder order = (AndroidTicketOrder)findCxxJavaObject (jOrder);
+				AndroidAliPayApi api = (AndroidAliPayApi)findCxxJavaObject (jApi);
+				string ticket = AndroidJNI.GetStringUTFChars (jTicket);
+				return p.onWillPay (order, api, ticket) ? 1 : 0;
+			} else if (null != (l as AndroidOnPayListener<TicketOrder, WxPayApi>)) {
+				AndroidOnPayListener<TicketOrder, WxPayApi> p = (AndroidOnPayListener<TicketOrder, WxPayApi>)l;
+				AndroidTicketOrder order = (AndroidTicketOrder)findCxxJavaObject (jOrder);
+				AndroidWxPayApi api = (AndroidWxPayApi)findCxxJavaObject (jApi);
+				string ticket = AndroidJNI.GetStringUTFChars (jTicket);
+				return p.onWillPay (order, api, ticket) ? 1 : 0;
+			} else {
+				// 非法case
+				return 0;
 			}
-			sInstance = null;
 		}
 
-		[DllImport("paysdk_bridge")]
-		private static extern int ComMobPaySDKUnityHookSetWillPayFunction (WillPayFunction func);
+		private static void payEndFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, int jResult)
+		{
+			CxxJavaObject l = findCxxJavaObject (jListener);
+			if (null != (l as AndroidOnPayListener<PayOrder, AliPayApi>)) {
+				AndroidOnPayListener<PayOrder, AliPayApi> p = (AndroidOnPayListener<PayOrder, AliPayApi>)l;
+				AndroidPayOrder order = (AndroidPayOrder)findCxxJavaObject (jOrder);
+				AndroidAliPayApi api = (AndroidAliPayApi)findCxxJavaObject (jApi);
+				p.onPayEnd (order, api, jResult);
+			} else if (null != (l as AndroidOnPayListener<PayOrder, WxPayApi>)) {
+				AndroidOnPayListener<PayOrder, WxPayApi> p = (AndroidOnPayListener<PayOrder, WxPayApi>)l;
+				AndroidPayOrder order = (AndroidPayOrder)findCxxJavaObject (jOrder);
+				AndroidWxPayApi api = (AndroidWxPayApi)findCxxJavaObject (jApi);
+				p.onPayEnd (order, api, jResult);
+			} else if (null != (l as AndroidOnPayListener<TicketOrder, AliPayApi>)) {
+				AndroidOnPayListener<TicketOrder, AliPayApi> p = (AndroidOnPayListener<TicketOrder, AliPayApi>)l;
+				AndroidTicketOrder order = (AndroidTicketOrder)findCxxJavaObject (jOrder);
+				AndroidAliPayApi api = (AndroidAliPayApi)findCxxJavaObject (jApi);
+				p.onPayEnd (order, api, jResult);
+			} else if (null != (l as AndroidOnPayListener<TicketOrder, WxPayApi>)) {
+				AndroidOnPayListener<TicketOrder, WxPayApi> p = (AndroidOnPayListener<TicketOrder, WxPayApi>)l;
+				AndroidTicketOrder order = (AndroidTicketOrder)findCxxJavaObject (jOrder);
+				AndroidWxPayApi api = (AndroidWxPayApi)findCxxJavaObject (jApi);
+				p.onPayEnd (order, api, jResult);
+			} else {
+				// 非法case
+			}
+		}
 
-		[DllImport("paysdk_bridge")]
-		private static extern int ComMobPaySDKUnityHookSetPayEndFunction (PayEndFunction func);
-
-		[DllImport("paysdk_bridge")]
-		public static extern IntPtr JNI_INTERNAL_CALL_NewObject(ref IntPtr iii);
 	}
 	#endif
 }

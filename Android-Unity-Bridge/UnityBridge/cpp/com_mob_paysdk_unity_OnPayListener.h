@@ -7,21 +7,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*
- * Class:     com_mob_paysdk_unity_OnPayListener
- * Method:    nativeOnWillPay
- * Signature: (Ljava/lang/String;Ljava/lang/String;)Z
- */
-JNIEXPORT jboolean JNICALL Java_com_mob_paysdk_unity_OnPayListener_nativeOnWillPay
-  (JNIEnv *, jobject, jstring, jobject);
 
-/*
- * Class:     com_mob_paysdk_unity_OnPayListener
- * Method:    nativeOnPayEnd
- * Signature: (ILjava/lang/String;)V
- */
+JNIEXPORT jboolean JNICALL Java_com_mob_paysdk_unity_OnPayListener_nativeOnWillPay
+  (JNIEnv *, jobject, jstring, jobject, jobject, jlong);
+
 JNIEXPORT void JNICALL Java_com_mob_paysdk_unity_OnPayListener_nativeOnPayEnd
-  (JNIEnv *, jobject, jint, jstring);
+  (JNIEnv *, jobject, jint, jobject, jobject, jlong);
 
 #ifdef __cplusplus
 }

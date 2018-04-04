@@ -5,7 +5,7 @@ using System.Collections;
 namespace cn.paysdk.unity
 {
 	#if UNITY_ANDROID
-	public abstract class MobPayApi
+	public abstract class MobPayApi : CxxJavaObject
 	{
 	}
 	public abstract class AliPayApi : MobPayApi

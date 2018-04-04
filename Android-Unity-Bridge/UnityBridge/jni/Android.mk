@@ -7,9 +7,7 @@ ifeq ($(USE_ARM_MODE),1)
 LOCAL_ARM_MODE := arm
 endif
 
-LOCAL_SRC_FILES := 	../cpp/main.cpp \
-                    ../cpp/com_mob_paysdk_unity_OnPayListener.cpp \
-                    ../cpp/Hook.cpp
+LOCAL_SRC_FILES := 	../cpp/com_mob_paysdk_unity_OnPayListener.cpp
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../cpp \

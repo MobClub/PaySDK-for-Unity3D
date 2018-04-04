@@ -8,20 +8,18 @@ namespace cn.paysdk.unity
 	#if UNITY_ANDROID
 	public class AndroidPayOrder : PayOrder {
 
-		private CxxJavaObject javaCore = new CxxJavaObject();
-
 		public AndroidPayOrder()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jret = CxxJavaObject.newJavaInstance("com/mob/paysdk/PayOrder");
-			javaCore.attachJavaObject (jret);
+			attachJavaObject (jret);
 			CxxJavaObject.callJavaEnd ();
 		}
 
 		public override string getOrderNo()
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID (jclazz, "getOrderNo", "()Ljava/lang/String;");
 			IntPtr jret = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
@@ -33,7 +31,7 @@ namespace cn.paysdk.unity
 		public override void setOrderNo(string orderNo)
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "setOrderNo", "(Ljava/lang/String;)V");
 			AndroidJNI.CallVoidMethod (jthiz, jmethod, CxxJavaObject.createJavaParam (orderNo));
@@ -43,7 +41,7 @@ namespace cn.paysdk.unity
 		public override int getAmount()
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getAmount", "()I");
 			int ret = AndroidJNI.CallIntMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
@@ -54,7 +52,7 @@ namespace cn.paysdk.unity
 		public override void setAmount(int amount)
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "setAmount", "(I)V");
 			AndroidJNI.CallVoidMethod(jthiz, jmethod, CxxJavaObject.createJavaParam(amount));
@@ -64,7 +62,7 @@ namespace cn.paysdk.unity
 		public override string getSubject()
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getSubject", "()Ljava/lang/String;");
 			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
@@ -76,7 +74,7 @@ namespace cn.paysdk.unity
 		public override void setSubject(string subject)
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "setSubject", "(Ljava/lang/String;)V");
 			IntPtr jvalue = AndroidJNI.NewStringUTF (subject);
@@ -87,7 +85,7 @@ namespace cn.paysdk.unity
 		public override string getBody()
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getBody", "()Ljava/lang/String;");
 			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
@@ -111,7 +109,7 @@ namespace cn.paysdk.unity
 		public override void setBody(string body)
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "setBody", "(Ljava/lang/String;)V");
 			IntPtr jvalue = AndroidJNI.NewStringUTF(body);
@@ -133,7 +131,7 @@ namespace cn.paysdk.unity
 		public override string getDescription()
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getDescription", "()Ljava/lang/String;");
 			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
@@ -145,7 +143,7 @@ namespace cn.paysdk.unity
 		public override void setDescription(string description)
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "setDescription", "(Ljava/lang/String;)V");
 			IntPtr jvalue = AndroidJNI.NewStringUTF(description);
@@ -156,7 +154,7 @@ namespace cn.paysdk.unity
 		public override string getMetadata()
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getMetadata", "()Ljava/lang/String;");
 			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
@@ -168,7 +166,7 @@ namespace cn.paysdk.unity
 		public override void setMetadata(string metadata)
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "setMetadata", "(Ljava/lang/String;)V");
 			IntPtr jvalue = AndroidJNI.NewStringUTF(metadata);
@@ -179,7 +177,7 @@ namespace cn.paysdk.unity
 		public override string getTicketId()
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getTicketId", "()Ljava/lang/String;");
 			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
@@ -188,36 +186,29 @@ namespace cn.paysdk.unity
 			return ret;
 		}
 
-		public IntPtr getLocalJavaObject()
-		{
-			return javaCore.getLocalJavaObject ();
-		}
-
 		~AndroidPayOrder()
 		{
 			IntPtr temp = new IntPtr();
 			CxxJavaObject.callJavaStart ();
-			javaCore.detachJavaObject (temp);
+			detachJavaObject (temp);
 			CxxJavaObject.callJavaEnd ();
 		}
 	}
 
 	public class AndroidTicketOrder : TicketOrder {
 
-		private CxxJavaObject javaCore = new CxxJavaObject();
-
 		public AndroidTicketOrder()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jret = CxxJavaObject.newJavaInstance("com/mob/paysdk/TicketOrder");
-			javaCore.attachJavaObject (jret);
+			attachJavaObject (jret);
 			CxxJavaObject.callJavaEnd ();
 		}
 
 		public override void setTicketId(string tId)
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "setTicketId", "(Ljava/lang/String;)V");
 			IntPtr jvalue = AndroidJNI.NewStringUTF(tId);
@@ -228,7 +219,7 @@ namespace cn.paysdk.unity
 		public override string getTicketId()
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = javaCore.getLocalJavaObject();
+			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getTicketId", "()Ljava/lang/String;");
 			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, null);
@@ -237,16 +228,11 @@ namespace cn.paysdk.unity
 			return ret;
 		}
 
-		public IntPtr getLocalJavaObject()
-		{
-			return javaCore.getLocalJavaObject ();
-		}
-
 		~AndroidTicketOrder()
 		{
 			IntPtr temp = new IntPtr();
 			CxxJavaObject.callJavaStart ();
-			javaCore.detachJavaObject (temp);
+			detachJavaObject (temp);
 			CxxJavaObject.callJavaEnd ();
 		}
 

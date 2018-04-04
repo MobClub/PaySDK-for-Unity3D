@@ -101,7 +101,16 @@ namespace cn.paysdk.unity
 			return jret;
 		}
 
-
+		/**
+         * 从映射表中找到java对象对应的cxx对象
+         * @param env
+         * @return
+         */
+		protected static CxxJavaObject findCxxJavaObject(IntPtr jObject)
+		{
+			// impl
+			return null;
+		}
 
 
 			

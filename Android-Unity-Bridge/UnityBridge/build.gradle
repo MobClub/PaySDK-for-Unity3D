@@ -68,7 +68,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     if (buildDepFromMaven) {
         MobSDK {
-            PaySDK {version = "1.0.0"}
+            PaySDK {version = "1.0.0.1"}
         }
     } else {
         compile project(':PaySDK')

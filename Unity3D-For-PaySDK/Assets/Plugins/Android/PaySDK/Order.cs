@@ -5,7 +5,7 @@ using System.Collections;
 namespace cn.paysdk.unity
 {
 	#if UNITY_ANDROID
-	public abstract class PayOrder {
+	public abstract class PayOrder : CxxJavaObject {
 
 		public static PayOrder create()
 		{
@@ -75,7 +75,7 @@ namespace cn.paysdk.unity
 		public abstract string getTicketId();
 	}
 
-	public abstract class TicketOrder {
+	public abstract class TicketOrder : CxxJavaObject {
 
 		public static TicketOrder create()
 		{
