@@ -21,14 +21,19 @@ namespace cn.paysdk.unity
 	
 	public class PaySDK : MonoBehaviour {
 
+		#if UNITY_ANDROID
+		static private AndroidPaySDKImpl paysdkImpl;
+		#elif UNITY_IOS
 		static private PaySDKInterface paysdkImpl;
+		#endif
+
 		static public PaySDKHandler resultHandler;
 
 		void Awake ()
 		{
 			Debug.Log("[PaySDK]PaySDK  ===>>>  Awake" );
 			#if UNITY_ANDROID
-
+			paysdkImpl = new AndroidPaySDKImpl();
 			#elif UNITY_IOS
 			paysdkImpl = new iOSPaySDKImpl (gameObject);
 			#endif
@@ -36,14 +41,22 @@ namespace cn.paysdk.unity
 														
 		static public void payWithOrder (PaySDKOrder order, PaySDKChannel channel, PaySDKHandler handler)
 		{
+			#if UNITY_ANDROID
+			paysdkImpl.payWithOrder (order, channel, handler);
+			#elif UNITY_IOS
 			PaySDK.resultHandler = handler;
 			paysdkImpl.payWithOrder (order, channel);
+			#endif
 		}
 
 		static public void payWithTicketId (string ticketId, PaySDKChannel channel, PaySDKHandler handler)
 		{
+			#if UNITY_ANDROID
+			paysdkImpl.payWithTicketId (ticketId, channel, handler);
+			#elif UNITY_IOS
 			PaySDK.resultHandler = handler;
 			paysdkImpl.payWithTicketId (ticketId, channel);
+			#endif
 		}
 
 		static public string getVersion ()

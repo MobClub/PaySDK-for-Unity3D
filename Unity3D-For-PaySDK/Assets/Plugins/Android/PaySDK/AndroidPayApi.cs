@@ -6,7 +6,7 @@ namespace cn.paysdk.unity
 {
 
 	#if UNITY_ANDROID
-	public class AndroidAliPayApi : AliPayApi
+	public class AndroidAliPayApi : CxxJavaObject
 	{
 		public AndroidAliPayApi()
 		{
@@ -16,7 +16,7 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override void pay(PayOrder order, OnPayListener<PayOrder, AliPayApi> callback)
+		public void pay(AndroidPayOrder order, AndroidOnPayListener<AndroidPayOrder, AndroidAliPayApi> callback)
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jApi = getLocalJavaObject();
@@ -27,14 +27,16 @@ namespace cn.paysdk.unity
 			AndroidPayOrder dOrder = (AndroidPayOrder) order;
 			IntPtr jorder = dOrder.getLocalJavaObject();
 
-			AndroidOnPayListener<PayOrder, AliPayApi> cxx = (AndroidOnPayListener<PayOrder, AliPayApi>)callback;
+			AndroidOnPayListener<AndroidPayOrder, AndroidAliPayApi> cxx = (AndroidOnPayListener<AndroidPayOrder, AndroidAliPayApi>)callback;
 			IntPtr jListener = cxx.getLocalJavaObject();
+			IntPtr gRef = cxx.getJavaObject ();
+			GCNativeKeeper.getInstance ().keep (gRef, cxx);
 
 			AndroidJNI.CallVoidMethod(jApi, jApiPayMethod, CxxJavaObject.createJavaParam(jorder, jListener));
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override void pay (TicketOrder order, OnPayListener<TicketOrder, AliPayApi> callback)
+		public void pay (AndroidTicketOrder order, AndroidOnPayListener<AndroidTicketOrder, AndroidAliPayApi> callback)
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jApi = getLocalJavaObject();
@@ -45,8 +47,10 @@ namespace cn.paysdk.unity
 			AndroidTicketOrder dOrder = (AndroidTicketOrder) order;
 			IntPtr jorder = dOrder.getLocalJavaObject();
 
-			AndroidOnPayListener<TicketOrder, AliPayApi> cxx = (AndroidOnPayListener<TicketOrder, AliPayApi>)callback;
+			AndroidOnPayListener<AndroidTicketOrder, AndroidAliPayApi> cxx = (AndroidOnPayListener<AndroidTicketOrder, AndroidAliPayApi>)callback;
 			IntPtr jListener = cxx.getLocalJavaObject();
+			IntPtr gRef = cxx.getJavaObject ();
+			GCNativeKeeper.getInstance ().keep (gRef, cxx);
 
 			AndroidJNI.CallVoidMethod(jApi, jApiPayMethod, CxxJavaObject.createJavaParam(jorder, jListener));
 			CxxJavaObject.callJavaEnd ();
@@ -58,7 +62,7 @@ namespace cn.paysdk.unity
 		}
 	}
 
-	public class AndroidWxPayApi : WxPayApi
+	public class AndroidWxPayApi : CxxJavaObject
 	{
 		private CxxJavaObject javaCore = new CxxJavaObject();
 
@@ -70,7 +74,7 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override void pay(PayOrder order, OnPayListener<PayOrder, WxPayApi> callback)
+		public void pay(AndroidPayOrder order, AndroidOnPayListener<AndroidPayOrder, AndroidWxPayApi> callback)
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jApi = javaCore.getLocalJavaObject();
@@ -81,14 +85,16 @@ namespace cn.paysdk.unity
 			AndroidPayOrder dOrder = (AndroidPayOrder) order;
 			IntPtr jorder = dOrder.getLocalJavaObject();
 
-			AndroidOnPayListener<PayOrder, WxPayApi> cxx = (AndroidOnPayListener<PayOrder, WxPayApi>)callback;
+			AndroidOnPayListener<AndroidPayOrder, AndroidWxPayApi> cxx = (AndroidOnPayListener<AndroidPayOrder, AndroidWxPayApi>)callback;
 			IntPtr jListener = cxx.getLocalJavaObject();
+			IntPtr gRef = cxx.getJavaObject ();
+			GCNativeKeeper.getInstance ().keep (gRef, cxx);
 
 			AndroidJNI.CallVoidMethod(jApi, jApiPayMethod, CxxJavaObject.createJavaParam(jorder, jListener));
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override void pay (TicketOrder order, OnPayListener<TicketOrder, WxPayApi> callback)
+		public void pay (AndroidTicketOrder order, AndroidOnPayListener<AndroidTicketOrder, AndroidWxPayApi> callback)
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jApi = javaCore.getLocalJavaObject();
@@ -99,8 +105,10 @@ namespace cn.paysdk.unity
 			AndroidTicketOrder dOrder = (AndroidTicketOrder) order;
 			IntPtr jorder = dOrder.getLocalJavaObject();
 
-			AndroidOnPayListener<TicketOrder, WxPayApi> cxx = (AndroidOnPayListener<TicketOrder, WxPayApi>)callback;
+			AndroidOnPayListener<AndroidTicketOrder, AndroidWxPayApi> cxx = (AndroidOnPayListener<AndroidTicketOrder, AndroidWxPayApi>)callback;
 			IntPtr jListener = cxx.getLocalJavaObject();
+			IntPtr gRef = cxx.getJavaObject ();
+			GCNativeKeeper.getInstance ().keep (gRef, cxx);
 
 			AndroidJNI.CallVoidMethod(jApi, jApiPayMethod, CxxJavaObject.createJavaParam(jorder, jListener));
 			CxxJavaObject.callJavaEnd ();

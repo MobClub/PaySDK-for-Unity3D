@@ -7,15 +7,33 @@ namespace cn.paysdk.unity
 {
 
 	#if UNITY_ANDROID
-	public class AndroidOnPayListener<O, API> : CxxJavaObject, OnPayListener<O, API>
+
+	using ORDER_ALI = AndroidOnPayListener<AndroidPayOrder, AndroidAliPayApi>;
+	using ORDER_WX = AndroidOnPayListener<AndroidPayOrder, AndroidWxPayApi>;
+	using TICKET_ALI = AndroidOnPayListener<AndroidTicketOrder, AndroidAliPayApi>;
+	using TICKET_WX = AndroidOnPayListener<AndroidTicketOrder, AndroidWxPayApi>;
+
+	public class AndroidOnPayListener<O, API> : CxxJavaObject
 	{
 		public static AndroidOnPayListener<O, API> create()
 		{
 			return new AndroidOnPayListener<O, API>();
 		}
 
-		private PaySDKHandler onPayListener;
+		private O payOrder;
+		public O PayOrder {
+			get { return payOrder; }
+			set { payOrder = value; }
+		}
 
+		private API payApi;
+		public API PayApi {
+			get { return payApi; }
+			set { payApi = value; }
+		}
+
+
+		private PaySDKHandler onPayListener;
 		public PaySDKHandler OnPayListener
 		{
 			get { return onPayListener; }
@@ -34,31 +52,9 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 
 		}
-		/*
-		public void onWillPay(string param)
+
+		protected bool onWillPay(string ticketId)
 		{
-
-		}
-
-		public void onPayEnd(string param)
-		{
-
-			int result = int.Parse (param);
-			PayResult payResult = new PayResult ();
-			payResult.setPayStatus (result);
-			if (null != onPayListener) {
-				onPayListener.onPayEnd (payResult, payOrder, payApi);
-			} 
-		}
-		*/
-
-		/**
-		 * 下面定义委托, 用于java回调 
-		 */
-		private delegate int WillPayFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, IntPtr jTicket);
-		private delegate void PayEndFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, int jResult);
-
-		protected bool onWillPay( O order, API api, string ticketId) {
 			PaySDKHandler l = onPayListener;
 			if (null != l) {
 				return l.onWillPay (ticketId);
@@ -66,11 +62,16 @@ namespace cn.paysdk.unity
 			return false;
 		}
 
-		protected void onPayEnd(O order, API api, int payResult) {
+		/**
+		 * 下面定义委托, 用于java回调 
+		 */
+		private delegate int WillPayFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, IntPtr jTicket);
+		private delegate void PayEndFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, int jResult);
+
+		protected void onPayEnd(int payResult) {
 			PaySDKHandler l = onPayListener;
 			if (null != l) {
-				// callback
-				//return l.onPayEnd (payResult, "", 0, "");
+				l.onPayEnd ((PaySDKStatus)payResult, "", 0, "");
 			}
 		}
 
@@ -79,33 +80,22 @@ namespace cn.paysdk.unity
 		 */
 		private static int willPayFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, IntPtr jTicket)
 		{
-			CxxJavaObject l = findCxxJavaObject (jListener);
-
-			if (null != (l as AndroidOnPayListener<PayOrder, AliPayApi>)) {
-				AndroidOnPayListener<PayOrder, AliPayApi> p = (AndroidOnPayListener<PayOrder, AliPayApi>)l;
-				AndroidPayOrder order = (AndroidPayOrder)findCxxJavaObject (jOrder);
-				AndroidAliPayApi api = (AndroidAliPayApi)findCxxJavaObject (jApi);
-				string ticket = AndroidJNI.GetStringUTFChars (jTicket);
-				return p.onWillPay (order, api, ticket) ? 1 : 0;
-			} else if (null != (l as AndroidOnPayListener<PayOrder, WxPayApi>)) {
-				AndroidOnPayListener<PayOrder, WxPayApi> p = (AndroidOnPayListener<PayOrder, WxPayApi>)l;
-				AndroidPayOrder order = (AndroidPayOrder)findCxxJavaObject (jOrder);
-				AndroidWxPayApi api = (AndroidWxPayApi)findCxxJavaObject (jApi);
-				string ticket = AndroidJNI.GetStringUTFChars (jTicket);
-				return p.onWillPay (order, api, ticket) ? 1 : 0;
-			} else if (null != (l as AndroidOnPayListener<TicketOrder, AliPayApi>)) {
-				AndroidOnPayListener<TicketOrder, AliPayApi> p = (AndroidOnPayListener<TicketOrder, AliPayApi>)l;
-				AndroidTicketOrder order = (AndroidTicketOrder)findCxxJavaObject (jOrder);
-				AndroidAliPayApi api = (AndroidAliPayApi)findCxxJavaObject (jApi);
-				string ticket = AndroidJNI.GetStringUTFChars (jTicket);
-				return p.onWillPay (order, api, ticket) ? 1 : 0;
-			} else if (null != (l as AndroidOnPayListener<TicketOrder, WxPayApi>)) {
-				AndroidOnPayListener<TicketOrder, WxPayApi> p = (AndroidOnPayListener<TicketOrder, WxPayApi>)l;
-				AndroidTicketOrder order = (AndroidTicketOrder)findCxxJavaObject (jOrder);
-				AndroidWxPayApi api = (AndroidWxPayApi)findCxxJavaObject (jApi);
-				string ticket = AndroidJNI.GetStringUTFChars (jTicket);
-				return p.onWillPay (order, api, ticket) ? 1 : 0;
-			} else {
+				
+			object l = GCNativeKeeper.getInstance().find(jListener);
+			string ticket = AndroidJNI.GetStringUTFChars (jTicket);
+			if (null != (l as ORDER_ALI)) {
+				ORDER_ALI p = (ORDER_ALI)l;
+				return p.onWillPay (ticket) ? 1 : 0;
+			} else if (null != (l as ORDER_WX)) {
+				ORDER_WX p = (ORDER_WX)l;
+				return p.onWillPay (ticket) ? 1 : 0;
+			} else if (null != (l as TICKET_ALI)) {
+				TICKET_ALI p = (TICKET_ALI)l;
+				return p.onWillPay (ticket) ? 1 : 0;
+			} else if (null != (l as TICKET_WX)) {
+				TICKET_WX p = (TICKET_WX)l;
+				return p.onWillPay (ticket) ? 1 : 0;
+			}  else {
 				// 非法case
 				return 0;
 			}
@@ -113,33 +103,26 @@ namespace cn.paysdk.unity
 
 		private static void payEndFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, int jResult)
 		{
-			CxxJavaObject l = findCxxJavaObject (jListener);
-			if (null != (l as AndroidOnPayListener<PayOrder, AliPayApi>)) {
-				AndroidOnPayListener<PayOrder, AliPayApi> p = (AndroidOnPayListener<PayOrder, AliPayApi>)l;
-				AndroidPayOrder order = (AndroidPayOrder)findCxxJavaObject (jOrder);
-				AndroidAliPayApi api = (AndroidAliPayApi)findCxxJavaObject (jApi);
-				p.onPayEnd (order, api, jResult);
-			} else if (null != (l as AndroidOnPayListener<PayOrder, WxPayApi>)) {
-				AndroidOnPayListener<PayOrder, WxPayApi> p = (AndroidOnPayListener<PayOrder, WxPayApi>)l;
-				AndroidPayOrder order = (AndroidPayOrder)findCxxJavaObject (jOrder);
-				AndroidWxPayApi api = (AndroidWxPayApi)findCxxJavaObject (jApi);
-				p.onPayEnd (order, api, jResult);
-			} else if (null != (l as AndroidOnPayListener<TicketOrder, AliPayApi>)) {
-				AndroidOnPayListener<TicketOrder, AliPayApi> p = (AndroidOnPayListener<TicketOrder, AliPayApi>)l;
-				AndroidTicketOrder order = (AndroidTicketOrder)findCxxJavaObject (jOrder);
-				AndroidAliPayApi api = (AndroidAliPayApi)findCxxJavaObject (jApi);
-				p.onPayEnd (order, api, jResult);
-			} else if (null != (l as AndroidOnPayListener<TicketOrder, WxPayApi>)) {
-				AndroidOnPayListener<TicketOrder, WxPayApi> p = (AndroidOnPayListener<TicketOrder, WxPayApi>)l;
-				AndroidTicketOrder order = (AndroidTicketOrder)findCxxJavaObject (jOrder);
-				AndroidWxPayApi api = (AndroidWxPayApi)findCxxJavaObject (jApi);
-				p.onPayEnd (order, api, jResult);
-			} else {
+			object l = GCNativeKeeper.getInstance().unKeep(jListener);
+			if (null != (l as ORDER_ALI)) {
+				ORDER_ALI p = (ORDER_ALI)l;
+				p.onPayEnd (jResult);
+			} else if (null != (l as ORDER_WX)) {
+				ORDER_WX p = (ORDER_WX)l;
+				p.onPayEnd (jResult);
+			} else if (null != (l as TICKET_ALI)) {
+				TICKET_ALI p = (TICKET_ALI)l;
+				p.onPayEnd (jResult);
+			} else if (null != (l as TICKET_WX)) {
+				TICKET_WX p = (TICKET_WX)l;
+				p.onPayEnd (jResult);
+			}  else {
 				// 非法case
 			}
 		}
 
 	}
+
 	#endif
 }
 

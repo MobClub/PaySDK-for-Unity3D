@@ -7,18 +7,15 @@ using System.Runtime.InteropServices;
 namespace cn.paysdk.unity
 {
 	#if UNITY_ANDROID
-	public class AndroidPaySDKImpl : PaySDKInterface
+	public class AndroidPaySDKImpl
 	{
-
-		public PaySDKHandler tempHandler;
-
 		public AndroidPaySDKImpl () 
 		{
 		}
 
-		public override void payWithOrder (PaySDKOrder order, PaySDKChannel channel)
+		public void payWithOrder (PaySDKOrder order, PaySDKChannel channel, PaySDKHandler handler)
 		{	
-			PayOrder aOrder = PayOrder.create ();
+			AndroidPayOrder aOrder = new AndroidPayOrder();
 			aOrder.setAmount ((int)order.amount);
 			aOrder.setBody (order.body);
 			aOrder.setDescription (order.des);
@@ -27,44 +24,43 @@ namespace cn.paysdk.unity
 			aOrder.setSubject (order.subject);
 
 			if (PaySDKChannel.PaySDKChannelAlipay == channel) {
-				AliPayApi api = AliPayApi.create ();
-				AndroidOnPayListener<PayOrder, AliPayApi> l = AndroidOnPayListener<PayOrder, AliPayApi>.create ();
-				l.OnPayListener = tempHandler;
-				tempHandler = null;
+				AndroidAliPayApi api = new AndroidAliPayApi();
+				AndroidOnPayListener<AndroidPayOrder, AndroidAliPayApi> l = AndroidOnPayListener<AndroidPayOrder, AndroidAliPayApi>.create ();
+				l.PayOrder = aOrder; l.PayApi = api; l.OnPayListener = handler;
 				api.pay (aOrder, l);
 			} else if (PaySDKChannel.PaySDKChannelWechat == channel) {
-				WxPayApi api = WxPayApi.create ();
-				AndroidOnPayListener<PayOrder, WxPayApi> l = AndroidOnPayListener<PayOrder, WxPayApi>.create ();
+				AndroidWxPayApi api = new AndroidWxPayApi();
+				AndroidOnPayListener<AndroidPayOrder, AndroidWxPayApi> l = AndroidOnPayListener<AndroidPayOrder, AndroidWxPayApi>.create ();
+				l.PayOrder = aOrder; l.PayApi = api; l.OnPayListener = handler;
 				api.pay (aOrder, l);
 			}
 		}
 
-		public override void payWithTicketId (string ticketId, PaySDKChannel channel)
+		public void payWithTicketId (string ticketId, PaySDKChannel channel, PaySDKHandler handler)
 		{
-			TicketOrder aOrder = TicketOrder.create ();
+			AndroidTicketOrder aOrder = new AndroidTicketOrder ();
 			aOrder.setTicketId (ticketId);
 
 			if (PaySDKChannel.PaySDKChannelAlipay == channel) {
-				AliPayApi api = AliPayApi.create ();
-				AndroidOnPayListener<TicketOrder, AliPayApi> l = AndroidOnPayListener<TicketOrder, AliPayApi>.create ();
-				l.OnPayListener = tempHandler;
-				tempHandler = null;
+				AndroidAliPayApi api = new AndroidAliPayApi ();
+				AndroidOnPayListener<AndroidTicketOrder, AndroidAliPayApi> l = AndroidOnPayListener<AndroidTicketOrder, AndroidAliPayApi>.create ();
+				l.PayOrder = aOrder; l.PayApi = api; l.OnPayListener = handler;
 				api.pay (aOrder, l);
 			} else if (PaySDKChannel.PaySDKChannelWechat == channel) {
-				WxPayApi api = WxPayApi.create ();
-				AndroidOnPayListener<TicketOrder, WxPayApi> l = AndroidOnPayListener<TicketOrder, WxPayApi>.create ();
-				l.OnPayListener = tempHandler;
-				tempHandler = null;
+				AndroidWxPayApi api = new AndroidWxPayApi ();
+				AndroidOnPayListener<AndroidTicketOrder, AndroidWxPayApi> l = AndroidOnPayListener<AndroidTicketOrder, AndroidWxPayApi>.create ();
+				l.PayOrder = aOrder; l.PayApi = api; l.OnPayListener = handler;
+
 				api.pay (aOrder, l);
 			}
 		}
 
-		public override string getVersion ()
+		public string getVersion ()
 		{
 			return "";
 		}
 
-		public override void setDebugMode (bool enabled)
+		public void setDebugMode (bool enabled)
 		{
 		}
 	}

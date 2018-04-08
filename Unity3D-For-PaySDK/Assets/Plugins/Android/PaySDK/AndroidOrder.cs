@@ -6,7 +6,7 @@ namespace cn.paysdk.unity
 {
 
 	#if UNITY_ANDROID
-	public class AndroidPayOrder : PayOrder {
+	public class AndroidPayOrder : CxxJavaObject {
 
 		public AndroidPayOrder()
 		{
@@ -16,7 +16,7 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override string getOrderNo()
+		public string getOrderNo()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -28,7 +28,7 @@ namespace cn.paysdk.unity
 			return ret;
 		}
 
-		public override void setOrderNo(string orderNo)
+		public void setOrderNo(string orderNo)
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -38,7 +38,7 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override int getAmount()
+		public int getAmount()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -49,7 +49,7 @@ namespace cn.paysdk.unity
 			return ret;
 		}
 
-		public override void setAmount(int amount)
+		public void setAmount(int amount)
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -59,7 +59,7 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override string getSubject()
+		public string getSubject()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -71,7 +71,7 @@ namespace cn.paysdk.unity
 			return ret;
 		}
 
-		public override void setSubject(string subject)
+		public void setSubject(string subject)
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -82,7 +82,7 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override string getBody()
+		public string getBody()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -106,7 +106,7 @@ namespace cn.paysdk.unity
 			return ret;
 		}
 
-		public override void setBody(string body)
+		public void setBody(string body)
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -128,7 +128,7 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override string getDescription()
+		public string getDescription()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -140,7 +140,7 @@ namespace cn.paysdk.unity
 			return ret;
 		}
 
-		public override void setDescription(string description)
+		public void setDescription(string description)
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -151,7 +151,7 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override string getMetadata()
+		public string getMetadata()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -163,7 +163,7 @@ namespace cn.paysdk.unity
 			return ret;
 		}
 
-		public override void setMetadata(string metadata)
+		public void setMetadata(string metadata)
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -174,7 +174,7 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override string getTicketId()
+		public string getTicketId()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -188,14 +188,10 @@ namespace cn.paysdk.unity
 
 		~AndroidPayOrder()
 		{
-			IntPtr temp = new IntPtr();
-			CxxJavaObject.callJavaStart ();
-			detachJavaObject (temp);
-			CxxJavaObject.callJavaEnd ();
 		}
 	}
 
-	public class AndroidTicketOrder : TicketOrder {
+	public class AndroidTicketOrder : CxxJavaObject {
 
 		public AndroidTicketOrder()
 		{
@@ -205,7 +201,7 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override void setTicketId(string tId)
+		public void setTicketId(string tId)
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -216,7 +212,7 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public override string getTicketId()
+		public string getTicketId()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
@@ -230,10 +226,6 @@ namespace cn.paysdk.unity
 
 		~AndroidTicketOrder()
 		{
-			IntPtr temp = new IntPtr();
-			CxxJavaObject.callJavaStart ();
-			detachJavaObject (temp);
-			CxxJavaObject.callJavaEnd ();
 		}
 
 	}

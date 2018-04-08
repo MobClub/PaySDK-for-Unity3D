@@ -8,7 +8,7 @@ namespace cn.paysdk.unity
 	#if UNITY_ANDROID
 	public class CxxJavaObject
 	{
-		private static Hashtable cxxJavaMap = new Hashtable();
+		private IntPtr javaObject;
 
 		/**
              * 附加javaObject对象到this对象
@@ -17,7 +17,7 @@ namespace cn.paysdk.unity
 		public void attachJavaObject(IntPtr lRef)
 		{
 			IntPtr gRef = AndroidJNI.NewGlobalRef (lRef);
-			cxxJavaMap.Add (this, gRef);
+			javaObject = gRef;
 		}
 
 		/**
@@ -26,9 +26,11 @@ namespace cn.paysdk.unity
              */
 		public void detachJavaObject(IntPtr lRef)
 		{
-			IntPtr gRef = (IntPtr)cxxJavaMap [this];
-			cxxJavaMap.Remove (this);
-			AndroidJNI.DeleteGlobalRef (gRef);
+			IntPtr gRef = (IntPtr)javaObject;
+			if (0 != (long)gRef) {
+				AndroidJNI.DeleteGlobalRef (gRef);
+				javaObject = (IntPtr)0;
+			}
 		}
 
 		/**
@@ -37,7 +39,7 @@ namespace cn.paysdk.unity
              */
 		public IntPtr getJavaObject()
 		{
-			IntPtr gRef = (IntPtr)cxxJavaMap [this];
+			IntPtr gRef = (IntPtr)javaObject;
 			return gRef;
 		}
 
@@ -70,16 +72,13 @@ namespace cn.paysdk.unity
 
 		public static void callJavaStart()
 		{
-			AndroidJNI.AttachCurrentThread ();
 			AndroidJNI.PushLocalFrame (16);
 		}
 
 		public static void callJavaEnd()
 		{
 			IntPtr p = new IntPtr();
-			AndroidJNI.PopLocalFrame (p);
-			// TODO why do not detach
-			// AndroidJNI.DetachCurrentThread ();
+			//AndroidJNI.PopLocalFrame (p);
 		}
 
 
@@ -101,17 +100,12 @@ namespace cn.paysdk.unity
 			return jret;
 		}
 
-		/**
-         * 从映射表中找到java对象对应的cxx对象
-         * @param env
-         * @return
-         */
-		protected static CxxJavaObject findCxxJavaObject(IntPtr jObject)
-		{
-			// impl
-			return null;
+		~CxxJavaObject() {
+			IntPtr temp = new IntPtr();
+			CxxJavaObject.callJavaStart ();
+			detachJavaObject (temp);
+			CxxJavaObject.callJavaEnd ();
 		}
-
 
 			
 	}

@@ -100,7 +100,7 @@ public class Demo : MonoBehaviour,PaySDKHandler {
 
 	public bool onWillPay (string ticketId) {
 		Debug.Log ("-----------> WillPay:" + ticketId);
-		return true;
+		return false;
 	}
 
 	public void onPayEnd (PaySDKStatus status, string ticketId, long errorCode, string errorDes) {
