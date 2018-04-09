@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace cn.paysdk.unity
 {
+	#if UNITY_ANDROID
 	public class GCNativeKeeper
 	{
 		private static object locker = new object();
@@ -71,5 +72,6 @@ namespace cn.paysdk.unity
 			}
 		}
 	}
+	#endif
 }
 

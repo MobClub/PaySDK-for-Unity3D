@@ -80,7 +80,6 @@ namespace cn.paysdk.unity
 		 */
 		private static int willPayFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, IntPtr jTicket)
 		{
-				
 			object l = GCNativeKeeper.getInstance().find(jListener);
 			string ticket = AndroidJNI.GetStringUTFChars (jTicket);
 			if (null != (l as ORDER_ALI)) {

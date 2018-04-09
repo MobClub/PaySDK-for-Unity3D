@@ -3,7 +3,7 @@
 buildscript {
 
     ext {
-        buildDepFromMaven = false
+        buildDepFromMaven = true
     }
 
     dependencies {

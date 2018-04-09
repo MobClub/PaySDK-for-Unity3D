@@ -64,20 +64,18 @@ namespace cn.paysdk.unity
 
 	public class AndroidWxPayApi : CxxJavaObject
 	{
-		private CxxJavaObject javaCore = new CxxJavaObject();
-
 		public AndroidWxPayApi()
 		{
 			CxxJavaObject.callJavaStart ();
 			IntPtr jret = CxxJavaObject.newJavaInstance("com/mob/paysdk/WXPayAPI");
-			javaCore.attachJavaObject (jret);
+			attachJavaObject (jret);
 			CxxJavaObject.callJavaEnd ();
 		}
 
 		public void pay(AndroidPayOrder order, AndroidOnPayListener<AndroidPayOrder, AndroidWxPayApi> callback)
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jApi = javaCore.getLocalJavaObject();
+			IntPtr jApi = getLocalJavaObject();
 			IntPtr jApiClazz = CxxJavaObject.getJavaClass(jApi);
 			IntPtr jApiPayMethod = CxxJavaObject.getJavaMethodID(jApiClazz, "pay",
 				"(Lcom/mob/paysdk/Order;Lcom/mob/paysdk/OnPayListener;)V");
@@ -97,7 +95,7 @@ namespace cn.paysdk.unity
 		public void pay (AndroidTicketOrder order, AndroidOnPayListener<AndroidTicketOrder, AndroidWxPayApi> callback)
 		{
 			CxxJavaObject.callJavaStart ();
-			IntPtr jApi = javaCore.getLocalJavaObject();
+			IntPtr jApi = getLocalJavaObject();
 			IntPtr jApiClazz = CxxJavaObject.getJavaClass(jApi);
 			IntPtr jApiPayMethod = CxxJavaObject.getJavaMethodID(jApiClazz, "pay",
 				"(Lcom/mob/paysdk/Order;Lcom/mob/paysdk/OnPayListener;)V");

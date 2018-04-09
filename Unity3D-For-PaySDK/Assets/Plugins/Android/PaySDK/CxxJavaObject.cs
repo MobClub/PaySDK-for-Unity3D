@@ -72,13 +72,14 @@ namespace cn.paysdk.unity
 
 		public static void callJavaStart()
 		{
+			// 这里防止未attach的线程, 调用产生错误, 比如C#的gc线程
+			AndroidJNI.AttachCurrentThread ();
 			AndroidJNI.PushLocalFrame (16);
 		}
 
 		public static void callJavaEnd()
 		{
-			IntPtr p = new IntPtr();
-			//AndroidJNI.PopLocalFrame (p);
+			AndroidJNI.PopLocalFrame ((IntPtr)0);
 		}
 
 
@@ -101,9 +102,8 @@ namespace cn.paysdk.unity
 		}
 
 		~CxxJavaObject() {
-			IntPtr temp = new IntPtr();
 			CxxJavaObject.callJavaStart ();
-			detachJavaObject (temp);
+			detachJavaObject ((IntPtr)0);
 			CxxJavaObject.callJavaEnd ();
 		}
 
