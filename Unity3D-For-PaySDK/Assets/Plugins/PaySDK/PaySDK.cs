@@ -8,7 +8,8 @@ namespace cn.paysdk.unity
 	public enum PaySDKChannel
 	{
 		PaySDKChannelWechat = 22,
-		PaySDKChannelAlipay = 50
+		PaySDKChannelAlipay = 50,
+		PaySDKChannelUnionPay = 53
 	}
 
 	public enum PaySDKStatus

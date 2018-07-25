@@ -17,7 +17,7 @@
 
 /**
  支付状态改变回调
-
+ 
  @param transaction 本次支付模型
  @param status 支付状态
  */
@@ -50,6 +50,13 @@
 + (void)payWithTicketId:(NSString *)ticketId;
 
 /**
+ 沙盒模式
+
+ @param enabled 默认关闭
+ */
++ (void)setSandBoxMode:(BOOL)enabled;
+
+/**
  版本号
 
  @return 版本信息
@@ -58,7 +65,7 @@
 
 /**
  日志打印
-
+ 
  @param enabled YES:开启日志 NO:关闭日志
  */
 + (void)setDebugMode:(BOOL)enabled;

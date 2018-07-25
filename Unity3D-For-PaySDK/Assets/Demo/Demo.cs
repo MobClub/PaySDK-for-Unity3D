@@ -56,6 +56,8 @@ public class Demo : MonoBehaviour,PaySDKHandler {
 		//iOS only
 		PaySDK.setDebugMode (true);
 
+		//创建微信支付按钮  x , y, w, h
+
 		if (GUI.Button(new Rect((Screen.width - btnWidth) / 2, btnTop, btnWidth, btnHeight), "微信支付"))
 		{
 			PaySDKOrder order = new PaySDKOrder ();
@@ -89,8 +91,31 @@ public class Demo : MonoBehaviour,PaySDKHandler {
 			PaySDK.payWithOrder (order, PaySDKChannel.PaySDKChannelAlipay, this);
 		}
 			
-		//展示回调结果
 		btnTop += btnHeight + 44 * scale;
+
+		//----
+		//创建银联支付的按钮
+		if (GUI.Button(new Rect((Screen.width - btnWidth) / 2, btnTop-45, btnWidth, btnHeight), "银联支付"))
+		{
+			PaySDKOrder order = new PaySDKOrder ();
+
+			order.orderId = DateTime.Now.ToFileTime().ToString();
+			order.amount = Convert.ToInt64(amount);
+			order.subject = "支付测试";
+			order.userId = "1234567890";
+			order.nickName = "nickName";
+			order.body = "body";
+			order.des = "des";
+			order.metadata = "{\n\t\"meta\": \"meta\"\n}";
+
+			PaySDK.payWithOrder (order, PaySDKChannel.PaySDKChannelUnionPay, this);
+		}
+			
+		
+		//btnTop += btnHeight + 44 * scale ;
+		btnTop += btnHeight + 22 * scale ;
+		btnTop = btnTop - 25;
+
 		GUIStyle style=new GUIStyle();
 		style.normal.textColor=new Color(1,0,0);   //字体颜色
 		// style.fontSize = 30;
@@ -103,6 +128,7 @@ public class Demo : MonoBehaviour,PaySDKHandler {
 		return false;
 	}
 
+	//支付结束 回调结果
 	public void onPayEnd (PaySDKStatus status, string ticketId, long errorCode, string errorDes) {
 
 		Debug.Log ("Status:" + status + "  ticketId:" + ticketId + "  errorCode:" + errorCode + "errorDes:" + errorDes);

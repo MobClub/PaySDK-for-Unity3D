@@ -9,8 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-extern NSString *kMOBFReachabilityChangedNotification;
-
 /**
  *  网络类型
  */

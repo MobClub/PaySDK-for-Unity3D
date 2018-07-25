@@ -18,6 +18,72 @@ git clone -b master --depth=1 https://github.com/MobClub/PaySDK-for-Unity3D.git
 #### iOS配置及注意事项(Android开发者可忽略)
 
 
+1.配置AppKey和AppSecret，如下图
+
+![image.png](https://upload-images.jianshu.io/upload_images/2121032-b0e45abe5bee6702.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+2.预配置Scheme 找到Unity3D-For-PaySDK - Assets - Plugins - iOS - PaySDK - Editor - PaySDK.mobpds,对其中的CFBundleURLSchemes进行设定,将其设置为您的 URI Scheme (注意不带'://') 
+
+```
+{
+    "folders":     ["/SDK"],
+    "buildSettings": { 
+        "OTHER_LDFLAGS" : ["-lz","-ObjC","-lsqlite3"]
+    }
+    "URLSchemes" : {
+    	"CFBundleURLSchemes" : ["wxc551587ec5a55ceb","ap2017073107971452","upmoba6b6c6d6"]
+    }
+}
+```
+
+添加代码(伪代码)
+
+1. 创建订单
+
+```
+PaySDKOrder order = new PaySDKOrder ();
+order.orderId = DateTime.Now.ToFileTime().ToString();
+order.amount = Convert.ToInt64(amount);
+order.subject = "支付测试";
+order.userId = "1234567890";
+order.nickName = "nickName";
+order.body = "body";
+order.des = "des";
+order.metadata = "{\n\t\"meta\": \"meta\"\n}";
+PaySDK.payWithOrder (order, PaySDKChannel.PaySDKChannelWechat, this);
+
+``` 
+
+2. 发起支付
+
+```
+PaySDK.payWithOrder (order, PaySDKChannel.PaySDKChannelAlipay, this);
+
+```
+
+
+3. 支付回调
+
+```
+//支付结束 回调结果
+	public void onPayEnd (PaySDKStatus status, string ticketId, long errorCode, string errorDes) {
+
+		Debug.Log ("Status:" + status + "  ticketId:" + ticketId + "  errorCode:" + errorCode + "errorDes:" + errorDes);
+		if (status == PaySDKStatus.PaySDKStatusCancel) {
+			result = "Pay Cancel";
+		} else if (status == PaySDKStatus.PaySDKStatusSuccess) {
+			result = "Pay Success";
+		} else if (status == PaySDKStatus.PaySDKStatusFail) {
+			result = "Pay Fail Error:" + errorCode + "  Des:" + errorDes;
+		} else {
+			result = "Pay Result Unknown  Error:" + errorCode + "  Des:" + errorDes;
+		}
+	} 
+```
+
+
+
 
 #### Android配置及注意事项(iOS开发者可忽略)
 

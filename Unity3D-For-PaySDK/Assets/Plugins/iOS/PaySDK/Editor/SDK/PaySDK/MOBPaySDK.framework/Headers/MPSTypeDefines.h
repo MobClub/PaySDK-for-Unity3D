@@ -18,7 +18,9 @@
 typedef NS_ENUM (NSUInteger, MPSChannel){
     
     MPSChannelAliPay = 50,
-    MPSChannelWeChat = 22
+    MPSChannelWeChat = 22,
+    MPSChannelUnionPay = 53,
+    MPSChannelApplePay = 54,
 };
 
 /**
@@ -31,7 +33,7 @@ typedef NS_ENUM (NSUInteger, MPSChannel){
  */
 typedef NS_ENUM (NSUInteger, MPSPayStatus){
     
-    MPSPayStatusBegin,
+    MPSPayStatusBegin = 0,
     MPSPayStatusSuccess,
     MPSPayStatusFail,
     MPSPayStatusCancel,
