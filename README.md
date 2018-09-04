@@ -37,6 +37,10 @@ git clone -b master --depth=1 https://github.com/MobClub/PaySDK-for-Unity3D.git
 }
 ```
 
+3. 添加系统PassKit.frame， 并添加白名单，名单如下
+![image.png](https://upload-images.jianshu.io/upload_images/2121032-3c406eeac72020a6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
 添加代码(伪代码)
 
 1. 创建订单
