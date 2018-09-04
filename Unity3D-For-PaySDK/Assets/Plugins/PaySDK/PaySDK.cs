@@ -15,9 +15,9 @@ namespace cn.paysdk.unity
 	public enum PaySDKStatus
 	{
 		PaySDKStatusSuccess = 0,
-		PaySDKStatusFail,
-		PaySDKStatusCancel,
-		MPSPayStatusUnknown
+		PaySDKStatusFail = 1,
+		PaySDKStatusCancel = 2,
+		MPSPayStatusUnknown = 3
 	}
 	
 	public class PaySDK : MonoBehaviour {
@@ -60,6 +60,7 @@ namespace cn.paysdk.unity
 			#endif
 		}
 
+		#if UNITY_IOS
 		static public string getVersion ()
 		{
 			return paysdkImpl.getVersion ();
@@ -67,11 +68,7 @@ namespace cn.paysdk.unity
 
 		static public void setDebugMode (bool enabled)
 		{
-			#if UNITY_ANDROID
-			// 无
-			#elif UNITY_IOS
 			paysdkImpl.setDebugMode(enabled);
-			#endif
 		}
 
 		private void _iOSPaysdkCallBack (string result)
@@ -84,7 +81,7 @@ namespace cn.paysdk.unity
 
 			int code = Convert.ToInt32 (res ["status"]);
 			string ticketId = res ["ticketId"].ToString();
-			long errorCode = Convert.ToInt64(res ["errorCode"]);
+			string errorCode = res ["errorCode"];
 			string errorDes = res ["errorDes"].ToString();
 
 			PaySDKStatus status;
@@ -102,9 +99,10 @@ namespace cn.paysdk.unity
 			if (code == 0) {
 				PaySDK.resultHandler.onWillPay (ticketId);
 			} else {
-				PaySDK.resultHandler.onPayEnd (status, ticketId, errorCode, errorDes);
+		PaySDK.resultHandler.onPayEnd (status, ticketId, new string(errorCode), errorDes);
 			}
 		}
+		#endif
 	}
 }
 	

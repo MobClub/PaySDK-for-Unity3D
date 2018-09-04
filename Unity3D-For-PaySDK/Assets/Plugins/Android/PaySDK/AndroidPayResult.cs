@@ -18,7 +18,7 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaStart ();
 			IntPtr jthiz = getLocalJavaObject();
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
-			IntPtr jmethod = CxxJavaObject.getJavaMethodID (jclazz, "getPayCode", "()I;");
+			IntPtr jmethod = CxxJavaObject.getJavaMethodID (jclazz, "getPayCode", "()I");
 			int jret = AndroidJNI.CallIntMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
 			CxxJavaObject.callJavaEnd ();
 			return jret;
@@ -31,7 +31,10 @@ namespace cn.paysdk.unity
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID (jclazz, "getPayMessage", "()Ljava/lang/String;");
 			IntPtr jret = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
-			string ret = AndroidJNI.GetStringUTFChars(jret);
+			string ret = null;
+			if (IntPtr.Zero != jret) {
+				ret = AndroidJNI.GetStringUTFChars (jret);
+			}
 			CxxJavaObject.callJavaEnd ();
 			return ret;
 		}
@@ -43,7 +46,10 @@ namespace cn.paysdk.unity
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID (jclazz, "getPayChannelCode", "()Ljava/lang/String;");
 			IntPtr jret = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
-			string ret = AndroidJNI.GetStringUTFChars(jret);
+			string ret = null;
+			if (IntPtr.Zero != jret) {
+				ret = AndroidJNI.GetStringUTFChars(jret);
+			}
 			CxxJavaObject.callJavaEnd ();
 			return ret;
 		}
@@ -55,7 +61,10 @@ namespace cn.paysdk.unity
 			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
 			IntPtr jmethod = CxxJavaObject.getJavaMethodID (jclazz, "getPayChannelMessage", "()Ljava/lang/String;");
 			IntPtr jret = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
-			string ret = AndroidJNI.GetStringUTFChars(jret);
+			string ret = null;
+			if (IntPtr.Zero != jret) {
+				ret = AndroidJNI.GetStringUTFChars (jret);
+			}
 			CxxJavaObject.callJavaEnd ();
 			return ret;
 		}

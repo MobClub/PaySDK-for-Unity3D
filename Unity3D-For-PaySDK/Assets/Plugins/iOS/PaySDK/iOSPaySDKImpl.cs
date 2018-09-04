@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace cn.paysdk.unity
 {
+	#if UNITY_IOS
 	public class iOSPaySDKImpl : PaySDKInterface
 	{
 
@@ -62,5 +63,6 @@ namespace cn.paysdk.unity
 			__iosPaySDKSetDebugMode (enabled);
 		}
 	}
+	#endif
 }
 

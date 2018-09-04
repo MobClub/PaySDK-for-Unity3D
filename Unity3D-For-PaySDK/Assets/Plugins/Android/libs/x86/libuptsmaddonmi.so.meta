@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 823b86b2bba2b434188a7dfe2b35ba3c
-timeCreated: 1522830125
+guid: a88ea9b937edd9c4eb897b6ed792d844
+timeCreated: 1536044225
 licenseType: Free
 PluginImporter:
   externalObjects: {}
@@ -14,7 +14,8 @@ PluginImporter:
       Android: Android
     second:
       enabled: 1
-      settings: {}
+      settings:
+        CPU: x86
   - first:
       Any: 
     second:
