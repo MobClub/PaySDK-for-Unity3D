@@ -1,12 +1,9 @@
-apply plugin: 'com.android.application'
-apply from: './build-mix.gradle'
-
-if (buildDepFromMaven) {
-    apply plugin: 'com.mob.sdk'
-}
+apply plugin: 'com.android.library'
+apply from: 'build-mix.gradle'
+apply plugin: 'com.mob.sdk'
 
 android {
-
+    publishNonDefault true
     compileSdkVersion findCompileSdkVersion()
     buildToolsVersion findBuildTools()
 
@@ -21,6 +18,8 @@ android {
                 arguments 'NDK_TOOLCHAIN_VERSION=4.9'
                 arguments 'APP_PLATFORM=android-' + findCompileSdkVersion()
                 arguments "NDK_APPLICATION_MK=jni/Application.mk"
+//                abiFilters.add("armeabi-v7a".sp)
+                abiFilters.addAll("armeabi armeabi-v7a x86 mips ".split("\\ "))
                 arguments '-j' + Runtime.runtime.availableProcessors()
             }
         }
@@ -65,12 +64,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    if (buildDepFromMaven) {
-        MobSDK {
-            PaySDK {version = "1.0.0.1"}
+    MobSDK {
+        PaySDK {
+            version "1.1.0"
+            info {
+                AliPay {}
+                Wechat {}
+                UnionPay {}
+            }
         }
-    } else {
-        compile project(':PaySDK')
     }
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 }

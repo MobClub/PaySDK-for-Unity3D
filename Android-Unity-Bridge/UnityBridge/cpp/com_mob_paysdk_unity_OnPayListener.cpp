@@ -1,5 +1,4 @@
 #include "com_mob_paysdk_unity_OnPayListener.h"
-#include "Hook.h"
 #include "jni.h"
 
 JNIEXPORT jboolean JNICALL Java_com_mob_paysdk_unity_OnPayListener_nativeOnWillPay
@@ -10,7 +9,7 @@ JNIEXPORT jboolean JNICALL Java_com_mob_paysdk_unity_OnPayListener_nativeOnWillP
 }
 
 JNIEXPORT void JNICALL Java_com_mob_paysdk_unity_OnPayListener_nativeOnPayEnd
-  (JNIEnv *env, jobject jthiz, jint jresult, jobject jOrder, jobject jApi, jlong  callback)
+  (JNIEnv *env, jobject jthiz, jobject jresult, jobject jOrder, jobject jApi, jlong  callback)
 {
 	ComMobPaySDKUnityHookFunctionPayEnd p = (ComMobPaySDKUnityHookFunctionPayEnd)callback;
 	p(jthiz, jOrder, jApi, jresult);

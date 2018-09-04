@@ -54,7 +54,9 @@ public class Demo : MonoBehaviour,PaySDKHandler {
 		btnTop += btnHeight + 10 * scale;
 
 		//iOS only
+		#if UNITY_IOS
 		PaySDK.setDebugMode (true);
+		#endif
 
 		//创建微信支付按钮  x , y, w, h
 

@@ -10,8 +10,10 @@ namespace cn.paysdk.unity
 
 		public abstract void payWithTicketId (string ticketId, PaySDKChannel channel);
 
+		#if UNITY_IOS
 		public abstract string getVersion ();
 
 		public abstract void setDebugMode (bool enabled);
+		#endif
 	}
 }

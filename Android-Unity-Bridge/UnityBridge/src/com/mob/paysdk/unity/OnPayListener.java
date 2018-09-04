@@ -33,10 +33,10 @@ public class OnPayListener<T> extends Object implements com.mob.paysdk.OnPayList
 
 	@Override
 	public void onPayEnd(PayResult payResult, T order, MobPayAPI api) {
-		nativeOnPayEnd(payResult.ordinal(), order, api, payEndMethod);
+		nativeOnPayEnd(payResult, order, api, payEndMethod);
 	}
 
 
 	private native boolean nativeOnWillPay(String tId, T order, MobPayAPI api, long callback);
-	private native void nativeOnPayEnd(int result, T order, MobPayAPI api, long callback);
+	private native void nativeOnPayEnd(PayResult result, T order, MobPayAPI api, long callback);
 }

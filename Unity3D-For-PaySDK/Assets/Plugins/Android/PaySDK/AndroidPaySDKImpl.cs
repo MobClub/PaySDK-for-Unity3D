@@ -22,46 +22,31 @@ namespace cn.paysdk.unity
 			aOrder.setMetadata (order.metadata);
 			aOrder.setOrderNo (order.orderId);
 			aOrder.setSubject (order.subject);
-
-			if (PaySDKChannel.PaySDKChannelAlipay == channel) {
-				AndroidAliPayApi api = new AndroidAliPayApi();
-				AndroidOnPayListener<AndroidPayOrder, AndroidAliPayApi> l = AndroidOnPayListener<AndroidPayOrder, AndroidAliPayApi>.create ();
-				l.PayOrder = aOrder; l.PayApi = api; l.OnPayListener = handler;
-				api.pay (aOrder, l);
-			} else if (PaySDKChannel.PaySDKChannelWechat == channel) {
-				AndroidWxPayApi api = new AndroidWxPayApi();
-				AndroidOnPayListener<AndroidPayOrder, AndroidWxPayApi> l = AndroidOnPayListener<AndroidPayOrder, AndroidWxPayApi>.create ();
-				l.PayOrder = aOrder; l.PayApi = api; l.OnPayListener = handler;
-				api.pay (aOrder, l);
-			}
+			AndroidPayApi api = createPayApi (channel);
+			AndroidOnPayListener listener = AndroidOnPayListener.create(api, aOrder, handler);
+			api.pay (aOrder, listener);
 		}
 
 		public void payWithTicketId (string ticketId, PaySDKChannel channel, PaySDKHandler handler)
 		{
 			AndroidTicketOrder aOrder = new AndroidTicketOrder ();
 			aOrder.setTicketId (ticketId);
+			AndroidPayApi api = createPayApi (channel);
+			AndroidOnPayListener listener = AndroidOnPayListener.create (api, aOrder, handler);
+			api.pay (aOrder, listener);
+		}
 
+		private AndroidPayApi createPayApi(PaySDKChannel channel)
+		{
 			if (PaySDKChannel.PaySDKChannelAlipay == channel) {
-				AndroidAliPayApi api = new AndroidAliPayApi ();
-				AndroidOnPayListener<AndroidTicketOrder, AndroidAliPayApi> l = AndroidOnPayListener<AndroidTicketOrder, AndroidAliPayApi>.create ();
-				l.PayOrder = aOrder; l.PayApi = api; l.OnPayListener = handler;
-				api.pay (aOrder, l);
+				return new AndroidAliPayApi();
 			} else if (PaySDKChannel.PaySDKChannelWechat == channel) {
-				AndroidWxPayApi api = new AndroidWxPayApi ();
-				AndroidOnPayListener<AndroidTicketOrder, AndroidWxPayApi> l = AndroidOnPayListener<AndroidTicketOrder, AndroidWxPayApi>.create ();
-				l.PayOrder = aOrder; l.PayApi = api; l.OnPayListener = handler;
-
-				api.pay (aOrder, l);
+				return new AndroidWxPayApi();
+			} else if (PaySDKChannel.PaySDKChannelUnionPay == channel) {
+				return new AndroidUnionPayApi();
+			} else {
+				return null;
 			}
-		}
-
-		public string getVersion ()
-		{
-			return "";
-		}
-
-		public void setDebugMode (bool enabled)
-		{
 		}
 	}
 	#endif

@@ -6,7 +6,25 @@ namespace cn.paysdk.unity
 {
 
 	#if UNITY_ANDROID
-	public class AndroidPayOrder : CxxJavaObject {
+	public class AndroidOrder : CxxJavaObject {
+		public AndroidOrder()
+		{
+		}
+
+		public string getTicketId()
+		{
+			CxxJavaObject.callJavaStart ();
+			IntPtr jthiz = getLocalJavaObject();
+			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
+			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getTicketId", "()Ljava/lang/String;");
+			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
+			string ret = AndroidJNI.GetStringUTFChars(jvalue);
+			CxxJavaObject.callJavaEnd ();
+			return ret;
+		}
+	}
+
+	public class AndroidPayOrder : AndroidOrder {
 
 		public AndroidPayOrder()
 		{
@@ -174,24 +192,12 @@ namespace cn.paysdk.unity
 			CxxJavaObject.callJavaEnd ();
 		}
 
-		public string getTicketId()
-		{
-			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = getLocalJavaObject();
-			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
-			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getTicketId", "()Ljava/lang/String;");
-			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, CxxJavaObject.createJavaParam((object)null));
-			string ret = AndroidJNI.GetStringUTFChars(jvalue);
-			CxxJavaObject.callJavaEnd ();
-			return ret;
-		}
-
 		~AndroidPayOrder()
 		{
 		}
 	}
 
-	public class AndroidTicketOrder : CxxJavaObject {
+	public class AndroidTicketOrder : AndroidOrder {
 
 		public AndroidTicketOrder()
 		{
@@ -210,18 +216,6 @@ namespace cn.paysdk.unity
 			IntPtr jvalue = AndroidJNI.NewStringUTF(tId);
 			AndroidJNI.CallVoidMethod(jthiz, jmethod, CxxJavaObject.createJavaParam(jvalue));
 			CxxJavaObject.callJavaEnd ();
-		}
-
-		public string getTicketId()
-		{
-			CxxJavaObject.callJavaStart ();
-			IntPtr jthiz = getLocalJavaObject();
-			IntPtr jclazz = CxxJavaObject.getJavaClass(jthiz);
-			IntPtr jmethod = CxxJavaObject.getJavaMethodID(jclazz, "getTicketId", "()Ljava/lang/String;");
-			IntPtr jvalue = AndroidJNI.CallObjectMethod(jthiz, jmethod, null);
-			string ret = AndroidJNI.GetStringUTFChars(jvalue);
-			CxxJavaObject.callJavaEnd ();
-			return ret;
 		}
 
 		~AndroidTicketOrder()

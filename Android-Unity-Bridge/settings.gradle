@@ -1,14 +1,5 @@
 include ':UnityBridge'
 
-//include ':MobTools'
-//project(':MobTools').projectDir = new File('D:/workspace/ShareSDKTools')
-//
-//include ':MobCommons'
-//project(':MobCommons').projectDir = new File('D:/workspace/MobCommons')
-
-include ':PaySDK'
-project(':PaySDK').projectDir = new File('D:/workspace/PaySDK/branches/release-1.0.0/PaySDK')
-
 
 
 

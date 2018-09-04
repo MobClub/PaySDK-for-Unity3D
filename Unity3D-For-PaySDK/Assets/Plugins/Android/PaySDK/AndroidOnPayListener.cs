@@ -7,27 +7,25 @@ namespace cn.paysdk.unity
 {
 
 	#if UNITY_ANDROID
-
-	using ORDER_ALI = AndroidOnPayListener<AndroidPayOrder, AndroidAliPayApi>;
-	using ORDER_WX = AndroidOnPayListener<AndroidPayOrder, AndroidWxPayApi>;
-	using TICKET_ALI = AndroidOnPayListener<AndroidTicketOrder, AndroidAliPayApi>;
-	using TICKET_WX = AndroidOnPayListener<AndroidTicketOrder, AndroidWxPayApi>;
-
-	public class AndroidOnPayListener<O, API> : CxxJavaObject
+	public class AndroidOnPayListener : CxxJavaObject
 	{
-		public static AndroidOnPayListener<O, API> create()
+		public static AndroidOnPayListener create(AndroidPayApi api, AndroidOrder order, PaySDKHandler handler)
 		{
-			return new AndroidOnPayListener<O, API>();
+			AndroidOnPayListener l = new AndroidOnPayListener();
+			l.PayOrder = order;
+			l.PayApi = api;
+			l.OnPayListener = handler;
+			return l;
 		}
 
-		private O payOrder;
-		public O PayOrder {
+		private AndroidOrder payOrder;
+		public AndroidOrder PayOrder {
 			get { return payOrder; }
 			set { payOrder = value; }
 		}
 
-		private API payApi;
-		public API PayApi {
+		private AndroidPayApi payApi;
+		public AndroidPayApi PayApi {
 			get { return payApi; }
 			set { payApi = value; }
 		}
@@ -53,6 +51,12 @@ namespace cn.paysdk.unity
 
 		}
 
+		/**
+		 * 下面定义委托, 用于java回调 
+		 */
+		private delegate int WillPayFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, IntPtr jTicket);
+		private delegate void PayEndFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, IntPtr jResult);
+
 		protected bool onWillPay(string ticketId)
 		{
 			PaySDKHandler l = onPayListener;
@@ -62,16 +66,10 @@ namespace cn.paysdk.unity
 			return false;
 		}
 
-		/**
-		 * 下面定义委托, 用于java回调 
-		 */
-		private delegate int WillPayFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, IntPtr jTicket);
-		private delegate void PayEndFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, int jResult);
-
-		protected void onPayEnd(int payResult) {
+		protected void onPayEnd(PaySDKStatus status, string ticketId, int channelErrorCode, string channelErrorDes) {
 			PaySDKHandler l = onPayListener;
 			if (null != l) {
-				l.onPayEnd ((PaySDKStatus)payResult, "", 0, "");
+				l.onPayEnd (status, ticketId, channelErrorCode, channelErrorDes);
 			}
 		}
 
@@ -81,47 +79,45 @@ namespace cn.paysdk.unity
 		private static int willPayFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, IntPtr jTicket)
 		{
 			object l = GCNativeKeeper.getInstance().find(jListener);
+			AndroidOnPayListener callback = (AndroidOnPayListener)l;
 			string ticket = AndroidJNI.GetStringUTFChars (jTicket);
-			if (null != (l as ORDER_ALI)) {
-				ORDER_ALI p = (ORDER_ALI)l;
-				return p.onWillPay (ticket) ? 1 : 0;
-			} else if (null != (l as ORDER_WX)) {
-				ORDER_WX p = (ORDER_WX)l;
-				return p.onWillPay (ticket) ? 1 : 0;
-			} else if (null != (l as TICKET_ALI)) {
-				TICKET_ALI p = (TICKET_ALI)l;
-				return p.onWillPay (ticket) ? 1 : 0;
-			} else if (null != (l as TICKET_WX)) {
-				TICKET_WX p = (TICKET_WX)l;
-				return p.onWillPay (ticket) ? 1 : 0;
-			}  else {
-				// 非法case
-				return 0;
-			}
+			return callback.onWillPay (ticket) ? 1 : 0;
 		}
 
-		private static void payEndFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, int jResult)
+		private static void payEndFunction(IntPtr jListener, IntPtr jOrder, IntPtr jApi, IntPtr jResult)
 		{
 			object l = GCNativeKeeper.getInstance().unKeep(jListener);
-			if (null != (l as ORDER_ALI)) {
-				ORDER_ALI p = (ORDER_ALI)l;
-				p.onPayEnd (jResult);
-			} else if (null != (l as ORDER_WX)) {
-				ORDER_WX p = (ORDER_WX)l;
-				p.onPayEnd (jResult);
-			} else if (null != (l as TICKET_ALI)) {
-				TICKET_ALI p = (TICKET_ALI)l;
-				p.onPayEnd (jResult);
-			} else if (null != (l as TICKET_WX)) {
-				TICKET_WX p = (TICKET_WX)l;
-				p.onPayEnd (jResult);
-			}  else {
-				// 非法case
+			AndroidOnPayListener callback = (AndroidOnPayListener)l;
+			AndroidPayResult result = new AndroidPayResult (jResult);
+			AndroidOrder order = callback.PayOrder;
+			AndroidPayApi api = callback.PayApi;
+			PaySDKStatus status = toPayStatus(result.getPayCode ());
+			string ticketId = order.getTicketId ();
+			int channelErrorCode = toInt(result.getPayChannelCode ());
+			string channelErrorDes = result.getPayChannelMessage ();
+			callback.onPayEnd (status, ticketId, channelErrorCode, channelErrorDes);
+		}
+
+		private static PaySDKStatus toPayStatus(int status)
+		{
+			if (0000 == status) {
+				return PaySDKStatus.PaySDKStatusSuccess;
+			} else if (1200 == status) {
+				return PaySDKStatus.PaySDKStatusCancel;
+			} else if (1300 == status) {
+				return PaySDKStatus.MPSPayStatusUnknown;
+			} else {
+				return PaySDKStatus.PaySDKStatusFail;
 			}
 		}
 
+		private static int toInt(string value)
+		{
+			int ret;
+			int.TryParse (value, out ret);
+			return ret;
+		}
 	}
-
 	#endif
 }
 
