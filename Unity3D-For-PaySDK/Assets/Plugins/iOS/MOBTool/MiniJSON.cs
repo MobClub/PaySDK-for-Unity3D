@@ -18,7 +18,7 @@ using System.Collections.Generic;
 /// All numbers are parsed to doubles.
 /// </summary>
 
-
+#if UNITY_IOS
 public class MiniJSON
 {
 	private const int TOKEN_NONE = 0;
@@ -737,5 +737,5 @@ public static class MiniJsonExtensions
 }
 
 #endregion
-
+#endif
 
