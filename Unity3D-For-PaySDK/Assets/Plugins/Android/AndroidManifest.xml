@@ -13,12 +13,15 @@
         android:xlargeScreens="true"
         android:anyDensity="true"/>
 		
-		    <!-- 支付Pay sdk权限 -->
+	<!-- 支付Pay sdk权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="org.simalliance.openmobileapi.SMARTCARD" />
+	<uses-permission android:name="android.permission.NFC" />
+	<uses-feature android:name="android.hardware.nfc.hce"/>
 
     <application
         android:name="com.mob.MobApplication"
@@ -39,7 +42,7 @@
             <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
         </activity>
 		
-		        <activity
+		<activity
             android:name="com.mob.paysdk.PaymentActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
@@ -72,5 +75,23 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+			
+		<!-- 银联支付 -->
+		<uses-library
+			android:name="org.simalliance.openmobileapi"
+			android:required="false" />
+
+		<activity
+			android:name="com.unionpay.uppay.PayActivity"
+			android:configChanges="orientation|keyboardHidden"
+			android:excludeFromRecents="true"
+			android:screenOrientation="portrait"
+			android:windowSoftInputMode="adjustResize" />
+
+		<activity
+			android:name="com.unionpay.UPPayWapActivity"
+			android:configChanges="orientation|keyboardHidden"
+			android:screenOrientation="portrait"
+			android:windowSoftInputMode="adjustResize" />
     </application>
 </manifest>
