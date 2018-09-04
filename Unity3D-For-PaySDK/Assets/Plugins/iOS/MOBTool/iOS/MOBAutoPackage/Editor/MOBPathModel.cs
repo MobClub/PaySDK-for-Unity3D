@@ -2,6 +2,7 @@
 
 namespace cn.mob.unity3d.sdkporter
 {
+	#if UNITY_IOS
 	public class MOBPathModel
 	{
 		public string rootPath;
@@ -14,5 +15,6 @@ namespace cn.mob.unity3d.sdkporter
 			filePath = "";
 		}
 	}
+	#endif
 }
 

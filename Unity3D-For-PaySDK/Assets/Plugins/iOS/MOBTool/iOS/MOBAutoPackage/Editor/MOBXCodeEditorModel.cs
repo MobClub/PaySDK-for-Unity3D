@@ -5,6 +5,7 @@ using System.IO;
 
 namespace cn.mob.unity3d.sdkporter
 {
+	#if UNITY_IOS
 	public class MOBXCodeEditorModel
 	{
 		public Hashtable permissions;
@@ -360,4 +361,5 @@ namespace cn.mob.unity3d.sdkporter
 			}
 		}
 	}
+	#endif
 }
