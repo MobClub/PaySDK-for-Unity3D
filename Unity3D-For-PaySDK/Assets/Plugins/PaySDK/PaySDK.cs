@@ -33,9 +33,7 @@ namespace cn.paysdk.unity
 		void Awake ()
 		{
 			Debug.Log("[PaySDK]PaySDK  ===>>>  Awake" );
-			#if UNITY_ANDROID
-			paysdkImpl = new AndroidPaySDKImpl();
-			#elif UNITY_IOS
+			#if UNITY_IOS
 			paysdkImpl = new iOSPaySDKImpl (gameObject);
 			#endif
 		}
@@ -43,6 +41,9 @@ namespace cn.paysdk.unity
 		static public void payWithOrder (PaySDKOrder order, PaySDKChannel channel, PaySDKHandler handler)
 		{
 			#if UNITY_ANDROID
+			if(null == paysdkImpl) {
+				paysdkImpl = new AndroidPaySDKImpl();
+			}
 			paysdkImpl.payWithOrder (order, channel, handler);
 			#elif UNITY_IOS
 			PaySDK.resultHandler = handler;
@@ -53,6 +54,9 @@ namespace cn.paysdk.unity
 		static public void payWithTicketId (string ticketId, PaySDKChannel channel, PaySDKHandler handler)
 		{
 			#if UNITY_ANDROID
+			if(null == paysdkImpl) {
+				paysdkImpl = new AndroidPaySDKImpl();
+			}
 			paysdkImpl.payWithTicketId (ticketId, channel, handler);
 			#elif UNITY_IOS
 			PaySDK.resultHandler = handler;
