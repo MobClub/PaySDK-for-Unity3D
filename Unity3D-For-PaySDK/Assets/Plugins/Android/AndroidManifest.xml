@@ -65,7 +65,7 @@
 
         <!-- 微信支付 -->
         <activity-alias
-            android:name="${applicationId}.wxapi.WXPayEntryActivity"
+            android:name="com.mob.paysdk.demo.wxapi.WXPayEntryActivity"
             tools:node="replace"
             android:exported="true"
             android:targetActivity="com.mob.paysdk.PaymentActivity" />
