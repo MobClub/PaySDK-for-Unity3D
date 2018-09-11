@@ -85,7 +85,7 @@ namespace cn.paysdk.unity
 
 			int code = Convert.ToInt32 (res ["status"]);
 			string ticketId = res ["ticketId"].ToString();
-			string errorCode = res ["errorCode"];
+			long errorCode = Convert.ToInt64(res ["errorCode"]);
 			string errorDes = res ["errorDes"].ToString();
 
 			PaySDKStatus status;
@@ -103,7 +103,7 @@ namespace cn.paysdk.unity
 			if (code == 0) {
 				PaySDK.resultHandler.onWillPay (ticketId);
 			} else {
-		PaySDK.resultHandler.onPayEnd (status, ticketId, new string(errorCode), errorDes);
+				PaySDK.resultHandler.onPayEnd (status, ticketId, errorCode, errorDes);
 			}
 		}
 		#endif
