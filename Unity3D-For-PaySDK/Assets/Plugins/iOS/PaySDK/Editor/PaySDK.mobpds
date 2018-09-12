@@ -6,5 +6,6 @@
     "URLSchemes" : {
     	"CFBundleURLSchemes" : ["wxc551587ec5a55ceb","ap2017073107971452","upmoba6b6c6d6"]
     }
+    "LSApplicationQueriesSchemes": ["uppayx3","uppayx2","uppayx1","uppaywallet","uppaysdk","weixin"]
     "sysFramework" : ["PassKit.framework"]
 }
