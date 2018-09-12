@@ -60,7 +60,7 @@ namespace cn.paysdk.unity
 
 		public override void setDebugMode (bool enabled)
 		{
-			__iosPaySDKSetDebugMode (enabled);
+			//__iosPaySDKSetDebugMode (enabled);
 		}
 	}
 	#endif
